@@ -15,8 +15,7 @@ namespace MicrosoftGraph_Security_API_Sample
         public void Configuration(IAppBuilder app)
         {
             app.MapSignalR();
-            ConfigureAuth(app);
-            
+            ConfigureAuth(app);            
         }
     }
 }
