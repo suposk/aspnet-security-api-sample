@@ -1,0 +1,91 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+@using Resources
+@using Newtonsoft.Json;
+@using MicrosoftGraph_Security_API_Sample.Models
+
+@{
+    ViewBag.Title = Resource.App_Name;
+    var AlertFilters = Session["AlertFilters"] as AlertFilter;
+    var AlertResults = Session["GetAlertResults"] as AlertResultsModel;
+    var currentAlert = Session["CurrentAlert"] as AlertModel;
+    var SubscriptionFilters = Session["SubscriptionFilters"] as SubscriptionFilters;
+    var UpdateAlertFilters = Session["UpdateAlertFilters"] as UpdateAlertModel;
+   }
+
+
+<h1 class="text-center">@ViewBag.Title</h1>
+
+<hr />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7">
+
+            @Html.Partial("_FilterPartialView", AlertFilters)
+
+            @if (AlertResults != null && Request.IsAuthenticated)
+            {
+                <hr />
+                <h2>Matching alerts</h2>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container-table">
+                                @if (AlertResults.Alerts?.Any() ?? false)
+                                {
+                                    <table class="table table-striped" border="1" cellpadding="10">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Category</th>
+                                                <th>Status</th>
+                                                <th>ID</th>
+                                                <th>Provider</th>
+                                            </tr>
+
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var alert in AlertResults.Alerts)
+                                            {
+                                                <tr>
+                                                    <td>@Html.ActionLink(alert.Title, "GetAlert", new { id = alert.Id })</td>
+                                                    <td>@alert.Category</td>
+                                                    <td>@alert.Status</td>
+                                                    <td>@alert.Id</td>
+                                                    <td>@alert.Provider</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    @("No matching alerts")
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <hr />
+            @if (Request.IsAuthenticated && currentAlert != null)
+            {
+                @Html.Partial("_UpdateAlertPartialView", new UpdateAlertModel { AlertId = currentAlert?.Id, Comments = currentAlert?.Comments, Feedback = currentAlert?.Feedback, UpdateStatus = currentAlert?.Status })
+
+            }
+            else
+            {
+                @Html.Partial("_UpdateAlertPartialView", new UpdateAlertModel())
+            }
+            <hr />
+
+            @Html.Partial("_SubscriptionPartialView", SubscriptionFilters)
+        
+        </div>
+        <div class="col-md-5">
+            @Html.Partial("Alert")
+        </div>
+    </div>
+</div>

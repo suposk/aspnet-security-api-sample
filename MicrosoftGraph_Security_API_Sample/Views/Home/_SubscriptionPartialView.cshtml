@@ -1,0 +1,120 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+
+@model MicrosoftGraph_Security_API_Sample.Models.SubscriptionFilters
+@using MicrosoftGraph_Security_API_Sample.Models
+@{
+    var providerList = Session["ProviderList"] as string[];
+    if (providerList == null)
+    {
+        providerList = new[] { "All" };
+    }
+    var SubscriptionResults = Session["GetSubscriptionResults"] as SubscriptionCollection;
+}
+<div class="container-fluid">
+    <h2>Subscribe and listen to alert notifications</h2>
+   @using (Html.BeginForm("ListSubscriptions", "Home"))
+    {
+        <div class="row">
+            <div class="col-md-10">
+                <h3>              
+                        List active subscriptions  
+                </h3>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button class="btn btn-primary form-control">
+                        <b>Subscriptions</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @using (Html.BeginForm("Subscribe", "Home"))
+    {
+        <h3>Create new subscription</h3>
+
+        //// The ‘Category’ dropdown menu contains ‘hard-coded’ values for the demo alert categories,
+        //// as the value for this property is populated by each security provider, and is thus an open list.
+        //// It appears here to demonstrate filtering by alert category as part of triage or an investigation.
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <b>Category</b>
+                    @Html.DropDownListFor(m => m.SubscriptionCategory, new SelectList(new[] { "All", "abnormalLogin", "accessDenied", "anomalousDataAccess", "anonymousLogin", "antimalwareActionTaken", "azBlackListLogin", "credentialLeakage", "documentDeclassification", "reconnaissance", "exploit", "impossibleTravel", "keyloggerTrojan", "malware", "ransomware", "rdpBruteforce", "reportCompromise", "riskScore", "sensitiveFileExfiltration", "suspiciousActivity", "suspiciousDomain", "suspiciousPowerShell", "suspiciousActivity", "threatIntelligence", "unfamiliarLocation", "updateRequired" }), new { @class = "form-control" })
+                </div>
+            </div>
+
+            @if (!Request.IsAuthenticated)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <b>Provider</b>
+                        @Html.DropDownListFor(m => m.SubscriptionProvider, new SelectList(new[] { "All" }), new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <b>Provider</b>
+                        @Html.DropDownListFor(m => m.SubscriptionProvider, new SelectList(providerList), new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <b>Severity</b>
+                    @Html.DropDownListFor(m => m.SubscriptionSeverity, new SelectList(new[] { "All", "High", "Medium", "Low" }), new { @class = "form-control" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <b>User Account</b>
+                    @Html.TextBoxFor(m => m.SubscriptionUpn, new { @class = "form-control", placeholder = "Enter User Principal Name (UPN)" })
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <b>Host Name</b>
+                    @Html.TextBoxFor(m => m.SubscriptionHostFqdn, new { @class = "form-control", placeholder = "Enter Fully Qualified Domain Name" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary form-control">
+                        <b>Subscribe</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-10">
+            <p>
+                Update the alert that matches the subscription filter and click <b>“Notify”</b>.
+                A notification page will open, self-refresh, and display alert updates.
+            </p>
+
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary form-control" onclick="window.open('/notification/loadview')">
+                    <b>Notify</b>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

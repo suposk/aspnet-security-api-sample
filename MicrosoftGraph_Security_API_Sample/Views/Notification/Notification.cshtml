@@ -1,0 +1,43 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+@using Newtonsoft.Json;
+@model MicrosoftGraph_Security_API_Sample.Models.NotificationViewModel
+
+@{
+    ViewBag.Title = "Microsoft Graph Security API Demo";
+    string CurrentUser = ViewBag.CurrentUserId;
+}
+
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        var connection = $.hubConnection();
+        var hub = connection.createHubProxy("NotificationHub");
+        hub.on("showNotification", function (messages) {
+            $.each(messages, function (index, current) {                       // Iterate through the message collection
+                {    // Don't show messages for different users
+                    var table = $("<table></table>");
+                    var header = $("<th>Message</th>").appendTo(table);
+                    var message = current.Message;
+                    for (prop in message) {                                    // Iterate through message properties
+                        var property = message[prop];
+                        var row = $("<tr></tr>");
+                        $("<td></td>").text(prop).appendTo(row);                       
+                            $("<td></td>").text(property).appendTo(row);                    
+                        table.append(row);
+                    }
+                    $("#message").append(table);
+                    $("#message").append("<br />");
+                }
+            });
+        });
+        connection.start();
+    </script>
+}
+<h2>Notifications</h2>
+<p>ISG SDK Subscription notifications will appear on this page.
+<p><b>Note:</b> The page will self-refresh – it may take several seconds for the notification to be displayed.</p>
+<br />
+<div id="message"></div>
+

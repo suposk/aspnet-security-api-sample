@@ -1,0 +1,137 @@
+﻿/* Overriding default Bootstrap v3 headings */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+h3 {
+    font-size: 14px;
+}
+
+h4 {
+    font-size: 12px;
+}
+
+h5 {
+    font-size: 10px;
+}
+
+h6 {
+    font-size: 8px;
+}
+/* ----------------------------------------- */
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+main {
+    margin: 15px 15px;
+}
+
+.container-user-info {
+    margin-top: 10px;
+    color: gray;
+}
+
+    .container-user-info .user-info-title {
+        font-size: 16px;
+    }
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border-color: cornflowerblue;
+}
+
+.container-table {
+    max-height: 265px;
+    overflow: auto;
+}
+
+.tab-content {
+    height: 80vh;
+    border-left: 1px solid rgb(221, 221,221);
+    border-right: 1px solid rgb(221, 221,221);
+    border-bottom: 1px solid rgb(221, 221,221);
+    padding: 20px;
+}
+
+.container-tab .tab-content {
+    max-height: 100%;
+    overflow: auto;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+
+.profile-value {
+    color: #337ab7;
+}
+
+.profile-picture {
+    padding: 10px;
+}
+
+.profile-picture-placeholder {
+    min-width: 100px;
+    min-height: 100px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100px
+}
+
+*[data-toggle='collapse'].collapsed > .caret {
+    transform: rotate(-90deg);
+}
+
+ul.devices-container {
+    list-style-type: none;
+    padding-left: 10px
+}
+
+.float-left {
+    float: left
+}
+
+pre {
+    background: transparent;
+    word-wrap: break-word;
+    border: 0
+}
+
+.devices-details {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px
+}
+
+.alert-details {
+    border: 1px solid rgb(221, 221,221);
+}
+
+.user-device {
+}
+
+.user-device.selected > a {
+    padding: 3px;
+    background: #337ab7;
+    color: #ffffff;
+}

@@ -1,0 +1,105 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+
+@model MicrosoftGraph_Security_API_Sample.Models.AlertFilter
+
+@{
+    var providerList = Session["ProviderList"] as string[];
+    if (providerList == null)
+    {
+        providerList = new[] { "All" };
+    }
+}
+
+@using (Html.BeginForm("GetAlerts", "Home"))
+{
+    <h2>Select alerts to view</h2>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Top, "Top X")
+                    @Html.DropDownListFor(m => m.Top, new SelectList(new[] { "1", "5", "10", "20", "50" }), new { @class = "form-control" })
+                </div>
+            </div>
+            @*// The ‘Category’ dropdown menu contains ‘hard-coded’ values for the demo alert categories,
+                // as the value for this property is populated by each security provider, and is thus an open list.
+                // It appears here to demonstrate filtering by alert category as part of triage or an investigation.*@
+            <div class="col-md-3">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Category)
+                    @Html.DropDownListFor(m => m.Category, new SelectList(new[] { "All", "abnormalLogin", "accessDenied", "anomalousDataAccess", "anonymousLogin", "antimalwareActionTaken", "azBlackListLogin", "credentialLeakage", "documentDeclassification", "reconnaissance", "exploit", "impossibleTravel", "keyloggerTrojan", "malware", "ransomware", "rdpBruteforce", "reportCompromise", "riskScore", "sensitiveFileExfiltration", "suspiciousActivity", "suspiciousDomain", "suspiciousPowerShell", "suspiciousActivity", "threatIntelligence", "unfamiliarLocation", "updateRequired" }), new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Status)
+                    @Html.DropDownListFor(m => m.Status, new SelectList(new[] { "All", "NewAlert", "InProgress", "Resolved" }, Model.Status), new { @class = "form-control" })
+                </div>
+            </div>
+
+            @*<div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Provider)
+                        @Html.DropDownListFor(m => m.Provider, new SelectList(new Dictionary<string, string> { { "All", "All" }, { "ASC", "Azure Security Center" }, { "IPC", "Azure AD Identity Protection" }, { "AIP", "Azure Information Protection" }, { "Windows Defender ATP", "Windows Defender ATP" } }, "Key", "Value", Model.Provider), new { @class = "form-control" })
+                    </div>
+                </div>*@
+
+            @if (!Request.IsAuthenticated)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Provider)
+
+                        @Html.DropDownListFor(m => m.Provider, new SelectList(new[] { "All" }, Model.Provider), new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Provider)
+                        @Html.DropDownListFor(m => m.Provider, new SelectList(providerList, Model.Provider), new { @class = "form-control" })
+
+
+                        @* @Html.DropDownListFor(m => m.Provider, new SelectList(new Dictionary<string, string> { { "All", "All" }, { "ASC", "Azure Security Center" }, { "IPC", "Azure AD Identity Protection" }, { "AIP", "Azure Information Protection" }, { "Windows Defender ATP", "Windows Defender ATP" } }, "Key", "Value", Model.Provider), new { @class = "form-control" })*@
+                    </div>
+                </div>
+            }
+
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Severity)
+                    @Html.DropDownListFor(m => m.Severity, new SelectList(new[] { "All", "High", "Medium", "Low" }, Model.Severity), new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Upn, "User Account")
+                    @Html.TextBoxFor(m => m.Upn, new { @class = "form-control", placeholder = "Enter User Principal Name (UPN)" })
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.HostFqdn, "Host Name")
+                    @Html.TextBoxFor(m => m.HostFqdn, new { @class = "form-control", placeholder = "Enter Fully Qualified Domain Name" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary form-control">
+                        <b>Get alerts</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
