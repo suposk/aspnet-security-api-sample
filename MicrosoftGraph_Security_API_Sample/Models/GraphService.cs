@@ -21,6 +21,10 @@ namespace MicrosoftGraph_Security_API_Sample.Models
     {
         public GraphServiceClient graphClient = null;
 
+        public string graphUrl = string.Empty;
+
+        public string graphUrlVersion = string.Empty;
+
         /// <summary>
         /// Initialize the graphClient
         /// </summary>
@@ -29,7 +33,9 @@ namespace MicrosoftGraph_Security_API_Sample.Models
             graphClient = SDKHelper.GetAuthenticatedClient();
             if (graphClient != null)
             {
-                graphClient.BaseUrl = ConfigurationManager.AppSettings["GraphBaseUrl"];
+                this.graphUrlVersion = ConfigurationManager.AppSettings["GraphUrlVersion"];
+                this.graphUrl = ConfigurationManager.AppSettings["GraphBaseUrl"] + this.graphUrlVersion;
+                graphClient.BaseUrl = this.graphUrl;
             }
 
         }
@@ -42,7 +48,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
         {
             graphClient.BaseUrl = "https://graph.microsoft.com/beta";
             User me = await graphClient.Me.Request().Select("mail,userPrincipalName").GetAsync();
-            graphClient.BaseUrl = ConfigurationManager.AppSettings["GraphBaseUrl"];
+            graphClient.BaseUrl = this.graphUrl;
             return me.Mail ?? me.UserPrincipalName;
         }
 
@@ -141,7 +147,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
             }
             catch { }
 
-            graphClient.BaseUrl = ConfigurationManager.AppSettings["GraphBaseUrl"];
+            graphClient.BaseUrl = this.graphUrl;
             return userModel;
         }
 

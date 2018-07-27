@@ -159,14 +159,14 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
 
                 if (!string.IsNullOrEmpty(alertFilter.FilteredQuery))
                 {
-                    queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts?$filter={HttpUtility.UrlEncode(alertFilter.FilteredQuery)}%26$top={alertFilter.Top}&&method=GET&version=beta&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/beta/security/alerts?");
+                    queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts?$filter={HttpUtility.UrlEncode(alertFilter.FilteredQuery)}%26$top={alertFilter.Top}&&method=GET&version={graphService.graphUrlVersion}&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/{graphService.graphUrlVersion}/security/alerts?");
 
                     queryBuilder.Append($"$filter={HttpUtility.UrlEncode(alertFilter.FilteredQuery)}&");
                     queryBuilder.Append($"$top={alertFilter.Top}</a>'");
                 }
                 else
                 {
-                    queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts?$top={alertFilter.Top}&&method=GET&version=beta&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/beta/security/alerts?");
+                    queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts?$top={alertFilter.Top}&&method=GET&version={graphService.graphUrlVersion}&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/{graphService.graphUrlVersion}/security/alerts?");
                     queryBuilder.Append($"$top={alertFilter.Top}</a>'");
                 }
                 queryBuilder.Append("<br />");
@@ -223,7 +223,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                 queryBuilder.Append($"SDK query: 'await graphClient.Security.Alerts[\"{updateAlertModel.AlertId}\"].Request().UpdateAsync(updatedAlert)'");
                 queryBuilder.Append("<br />");
 
-                queryBuilder.Append($"REST query: PATCH '<a>https://graph.microsoft.com/beta/security/alerts/{updateAlertModel.AlertId}</a>'");
+                queryBuilder.Append($"REST query: PATCH '<a>https://graph.microsoft.com/{graphService.graphUrlVersion}/security/alerts/{updateAlertModel.AlertId}</a>'");
                 queryBuilder.Append("<br />");
 
                 var email = await graphService.GetMyEmailAddress();
@@ -337,7 +337,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                 queryBuilder.Append($"SDK query: 'await graphClient.Security.Alerts[\"{id}\"].Request().GetAsync();'");
                 queryBuilder.Append("<br />");
 
-                queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts/{id}&method=GET&version=beta&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/beta/security/alerts/{id}/</a>'");
+                queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=security/alerts/{id}&method=GET&version={graphService.graphUrlVersion}&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/{graphService.graphUrlVersion}/security/alerts/{id}/</a>'");
                 queryBuilder.Append("<br />");
 
                 var alertModel = new AlertModel
@@ -413,7 +413,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     queryBuilder.Append($"SDK query: 'graphClient.Subscriptions.Request().AddAsync(subscription)'");
                     queryBuilder.Append("<br />");
 
-                    queryBuilder.Append($"REST query: POST '<a>https://graph.microsoft.com/beta/subscriptions</a>'");
+                    queryBuilder.Append($"REST query: POST '<a>https://graph.microsoft.com/{graphService.graphUrlVersion}/subscriptions</a>'");
                     queryBuilder.Append("<br />");
                     queryBuilder.Append($"Request Body: ResourceUri = {subscription.Resource}; ExpirationDateTime = {subscription.ExpirationDateTime}; ");
 
@@ -474,7 +474,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                 var queryBuilder = new StringBuilder();
                 queryBuilder.Append("SDK query: 'graphClient.Subscriptions.Request().GetAsync()'");
                 queryBuilder.Append("<br />");
-                queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=subscriptions&&method=GET&version=beta&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/beta/subscriptions</a>'");
+                queryBuilder.Append($"REST query: '<a href=\"https://developer.microsoft.com/en-us/graph/graph-explorer?request=subscriptions&&method=GET&version={graphService.graphUrlVersion}&GraphUrl=https://graph.microsoft.com\" target=\"_blank\">https://graph.microsoft.com/{graphService.graphUrlVersion}/subscriptions</a>'");
 
                 var subscriptionCollection = new SubscriptionCollection
                 {
