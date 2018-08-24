@@ -232,7 +232,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     email = $" alert.AssignedTo = {email}; ";
                 }
 
-                queryBuilder.Append($"Request Body: alert.Status = {updateAlertModel.UpdateStatus}; {email} alert.Feedback = {updateAlertModel.Feedback}; alert.Comments = {updateAlertModel.Comments} ");
+                queryBuilder.Append($"Request Body: alert.Status = {updateAlertModel?.UpdateStatus}; {email} alert.Feedback = {updateAlertModel?.Feedback}; alert.Comments = {updateAlertModel?.Comments} ");
 
                 var updateAlertResultModel = new UpdateAlertResultModel { Query = queryBuilder.ToString() };
 
@@ -252,12 +252,18 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
 
                     return View("Graph");
                 }
+                var commentsSbBefore = new StringBuilder();
+                foreach(var comment in alert?.Comments.ToList())
+                {
+                    commentsSbBefore.Append(comment);
+                    commentsSbBefore.Append("<br />");
+                }
 
                 updateAlertResultModel.Before = new UpdateAlertResultItemModel
                 {
                     Title = alert.Title,
                     Status = alert.Status.ToString(),
-                    Comments = alert.Comments,
+                    Comments = commentsSbBefore.ToString(),
                     Feedback = alert.Feedback.ToString(),
                     AssignedTo = alert.AssignedTo,
                     Category = alert.Category,
@@ -267,11 +273,18 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
 
                 await graphService.UpdateAlert(alert, updateAlertModel);
                 Alert alertUpdated = await graphService.GetAlertById(alert.Id);
+
+                var commentsSbAfter = new StringBuilder();
+                foreach (var comment in alertUpdated.Comments.ToList())
+                {
+                    commentsSbAfter.Append(comment);
+                    commentsSbAfter.Append("<br />");
+                }
                 updateAlertResultModel.After = new UpdateAlertResultItemModel
                 {
                     Title = alertUpdated.Title,
                     Status = alertUpdated.Status.ToString(),
-                    Comments = alertUpdated.Comments,
+                    Comments = commentsSbAfter.ToString(),
                     Feedback = alertUpdated.Feedback.ToString(),
                     AssignedTo = alertUpdated.AssignedTo,
                     Category = alertUpdated.Category,
@@ -345,7 +358,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     Id = alert.Id,
                     Metadata = JsonConvert.SerializeObject(alert, Formatting.Indented),
                     Query = queryBuilder.ToString(),
-                    Comments = alert.Comments,
+                    Comments = alert.Comments?.ToList(),
                     Status = alert.Status.ToString(),
                     Feedback = alert.Feedback.ToString()
                 };
@@ -362,7 +375,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     alertModel.Device = new AlertDeviceModel
                     {
                         Fqdn = hostState.Fqdn,
-                        IsAzureDomainJoined = hostState.IsAzureAadJoined,
+                        IsAzureDomainJoined = hostState.IsAzureAdJoined,
                         PublicIpAddress = hostState.PublicIpAddress,
                         PrivateIpAddress = hostState.PrivateIpAddress
                     };

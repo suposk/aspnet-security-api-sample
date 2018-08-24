@@ -3,6 +3,7 @@
 @using Resources
 @using Newtonsoft.Json;
 @using MicrosoftGraph_Security_API_Sample.Models
+@using System.Text
 
 @{
     ViewBag.Title = Resource.App_Name;
@@ -72,7 +73,17 @@
             <hr />
             @if (Request.IsAuthenticated && currentAlert != null)
             {
-                @Html.Partial("_UpdateAlertPartialView", new UpdateAlertModel { AlertId = currentAlert?.Id, Comments = currentAlert?.Comments, Feedback = currentAlert?.Feedback, UpdateStatus = currentAlert?.Status })
+                var comments = new StringBuilder();
+                if (currentAlert?.Comments != null && currentAlert?.Comments.Count != 0)
+                {
+                    foreach(var comment in currentAlert?.Comments)
+                    {
+                        comments.Append(comment);
+                        comments.Append("\n");
+                    }
+                }
+
+                @Html.Partial("_UpdateAlertPartialView", new UpdateAlertModel { AlertId = currentAlert?.Id, Comments = comments.ToString() , Feedback = currentAlert?.Feedback, UpdateStatus = currentAlert?.Status })
 
             }
             else

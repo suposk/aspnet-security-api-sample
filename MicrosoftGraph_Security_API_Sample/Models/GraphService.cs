@@ -234,11 +234,13 @@ namespace MicrosoftGraph_Security_API_Sample.Models
 
             alert.Feedback = feedback;
 
-            if (!string.IsNullOrEmpty(updateAlertModel.Comments))
-            {
-                alert.Comments = updateAlertModel.Comments;
-            }           
-
+            if (!string.IsNullOrEmpty(updateAlertModel.Comments)){
+                updateAlertModel.Comments = updateAlertModel.Comments.Replace("\r", "");
+                char[] charSeperators = new char[] { '\n' };
+                List<string> comments = updateAlertModel.Comments.Split(charSeperators, StringSplitOptions.RemoveEmptyEntries).ToList();
+                alert.Comments = comments;
+            }
+                      
             alert.AssignedTo = await GetMyEmailAddress();
             return await graphClient.Security.Alerts[alert.Id].Request().UpdateAsync(alert);
         }
