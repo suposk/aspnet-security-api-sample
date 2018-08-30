@@ -4,6 +4,7 @@
 */
 
 using Microsoft.Graph;
+using System.Collections.Generic;
 
 namespace MicrosoftGraph_Security_API_Sample.Models
 {
@@ -13,7 +14,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
 
         public string Metadata { get; set; }
 
-        public string Comments { get; set; }
+        public List<string> Comments { get; set; }
 
         public string Status { get; set; }
       

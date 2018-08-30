@@ -1,5 +1,6 @@
-﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
-        See LICENSE in the source repository root for complete license information. -->
+﻿﻿
+<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+       See LICENSE in the source repository root for complete license information. -->
 
 @using MicrosoftGraph_Security_API_Sample.Models
 @using Newtonsoft.Json;
@@ -44,7 +45,7 @@
             <a href="#alert-metadata" aria-controls="alert-metadata" role="tab" data-toggle="tab">Alert details</a>
         </li>
         <li role="presentation" class="@(currentTab == "user" ? "active" : string.Empty)">
-            <a href="#user-device-metadata" aria-controls="user-device-metadata" role="tab" data-toggle="tab">User &amp; device details</a>
+            <a href="#user-device-metadata" aria-controls="user-device-metadata" role="tab" data-toggle="tab">User and device details</a>
         </li>
 
         @if (updateAlertResults != null)
@@ -266,7 +267,7 @@
                                                 <tr><td>Feedback</td><td>@updateAlertResults.Before.Feedback</td></tr>
                                                 <tr><td>Provider</td><td>@updateAlertResults.Before.Provider</td></tr>
                                                 <tr><td>Assigned To</td><td>@updateAlertResults.Before.AssignedTo</td></tr>
-                                                <tr><td>Comments</td><td>@updateAlertResults.Before.Comments</td></tr>
+                                                <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.Before.Comments)</td></tr>
                                             </tbody>
                                         </table>
                                     }
@@ -287,7 +288,7 @@
                                                 <tr><td>Feedback</td><td>@updateAlertResults.After.Feedback</td></tr>
                                                 <tr><td>Provider</td><td>@updateAlertResults.After.Provider</td></tr>
                                                 <tr><td>Assigned To</td><td>@updateAlertResults.After.AssignedTo</td></tr>
-                                                <tr><td>Comments</td><td>@updateAlertResults.After.Comments</td></tr>
+                                                <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.After.Comments)</td></tr>
                                             </tbody>
                                         </table>
                                     }
@@ -350,7 +351,7 @@
                                     @if (listActiveSubscriptions.Subscriptions?.Any() ?? false)
                                     {
                                         <br />
-                                                    <h3>Subscriptions that are currently active: </h3>
+                                        <h3>Subscriptions that are currently active: </h3>
                                                     <br />
                                                     <table class="table table-striped" border="1" cellpadding="50">
                                                         <thead>
@@ -376,7 +377,7 @@
                                     else
                                     {
                                         <br />
-                                                <b>@("No active subscriptions")</b>
+                                        <b>@("No active subscriptions")</b>
                                     }
                                 </div>
                             }
