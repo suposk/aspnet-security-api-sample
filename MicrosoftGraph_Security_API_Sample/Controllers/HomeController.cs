@@ -268,7 +268,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     AssignedTo = alert.AssignedTo,
                     Category = alert.Category,
                     Provider = alert.VendorInformation.Provider,
-                    Severity = alert.Severity
+                    Severity = alert.Severity.ToString()
                 };
 
                 await graphService.UpdateAlert(alert, updateAlertModel);
@@ -289,7 +289,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                     AssignedTo = alertUpdated.AssignedTo,
                     Category = alertUpdated.Category,
                     Provider = alertUpdated.VendorInformation.Provider,
-                    Severity = alertUpdated.Severity
+                    Severity = alertUpdated.Severity.ToString()
                 };
 
                 Session["UpdateAlertResults"] = updateAlertResultModel;
