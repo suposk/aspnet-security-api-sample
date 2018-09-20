@@ -250,16 +250,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <None Include="Properties\PublishProfiles\isgclientsdkdemo - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgclientsdkdemov2 - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgclientsdkdev - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgclientsdkppe - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgsdkdemo - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\isgsdkdemo - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgsdkdemov2 - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgsdkdemov3 - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\isgsdkdemov4 - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\Webapp20170317111105 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
