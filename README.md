@@ -109,6 +109,8 @@ This section describes how the Tenant Administrator can authorize specific users
 
 Repeat this action for each user in the organization that is authorized to use applications that call the Microsoft Graph security API. Currently, this permission cannot be granted to security groups.
 
+> **Note:** For more details about the authorization flow, read [Authorization and the Microsoft Graph Security API](https://developer.microsoft.com/en-us/graph/docs/concepts/security-authorization).
+
 ## Configure and run the sample for **MicrosoftGraph_Security_API_Sample** project (Part 1)
 
 1. Open the MicrosoftGraph_Security_API_Sample project. In the Web.config file in the root directory, replace the **ida:AppId** and **ida:AppSecret** placeholder values with the application ID and password that you copied during app registration. 
