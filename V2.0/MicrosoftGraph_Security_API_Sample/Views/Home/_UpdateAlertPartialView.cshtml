@@ -1,0 +1,50 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+
+@model MicrosoftGraph_Security_API_Sample.Models.UpdateAlertModel
+
+@using (Html.BeginForm("UpdateAlert", "Home"))
+{
+    <h2>Manage alerts</h2>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UpdateStatus)
+                    @Html.DropDownListFor(m => m.UpdateStatus, new SelectList(new[] { "NewAlert", "InProgress", "Resolved", "Unknown" }), new { @class = "form-control" })
+                </div>
+            </div>            
+            <div class="col-md-2">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Feedback)
+                    @Html.DropDownListFor(m => m.Feedback, new SelectList(new[] { "Unknown", "TruePositive", "FalsePositive" }), new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Comments)
+                    @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", rows = 2, cols = 25, placeholder = "Enter comments" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.AlertId)
+                    @Html.TextBoxFor(m => m.AlertId, new { @class = "form-control", placeholder = "Enter alert ID" })
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary form-control" id="update-alerts">
+                        <b>Update alert</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

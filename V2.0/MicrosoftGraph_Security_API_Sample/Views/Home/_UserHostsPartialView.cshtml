@@ -1,0 +1,141 @@
+﻿@model MicrosoftGraph_Security_API_Sample.Models.ViewModels.AlertDetailsViewModel
+
+@if (Model.User != null)
+{
+    var user = Model.User;
+    <div class="row">
+        <div class="col-md-2 profile-picture">
+            @if (user.Picture != null)
+            {
+                <img src="@user.Picture" width="100" height="100" />
+            }
+            else
+            {
+                <div class="profile-picture-placeholder">[No picture]</div>
+            }
+        </div>
+        <div class="col-md-9">
+            <h3>@user.DisplayName</h3>
+            <h3>@user.Email</h3>
+        </div>
+    </div>
+    <div>
+        <span>Job title: </span><span class="profile-value">@(user.JobTitle ?? "[No data]")</span>
+    </div>
+    <div>
+        <span>Manager: </span><span class="profile-value">@(user?.Manager?.DisplayName ?? "[No data]")</span>
+    </div>
+    <div>
+        <span>Contact via </span><span class="profile-value">@(user.ContactVia ?? "[No data]")</span>
+    </div>
+    <div>
+        <span>Office location: </span><span class="profile-value">@(user.OfficeLocation ?? "[No data]")</span>
+    </div>
+    <div>
+        <span>Email: </span>
+        <span class="profile-value">
+            @if (!string.IsNullOrEmpty(@user.Email))
+            {
+                <a href="mailto: @user.Email" target="_blank">@user.Email</a>
+            }
+            else
+            {
+                @("[No data]")
+            }
+        </span>
+    </div>
+    if (user.RegisteredDevices?.Any() ?? false)
+    {
+        <div>
+            <a data-toggle="collapse" href="#registeredDevices" aria-expanded="true" aria-controls="registeredDevices">
+                <span class="caret"></span> Registered devices
+            </a>
+            <ul class="devices-container collapse in" id="registeredDevices" aria-expanded="true">
+                @foreach (var device in user.RegisteredDevices)
+                {
+                    <li>
+                        <span class="user-device @(device.Id == user?.SelectedDevice?.Id ? "selected" : string.Empty)">@Html.ActionLink(device.DisplayName, "GetDevice", new { id = device.Id })</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    if (user.OwnedDevices?.Any() ?? false)
+    {
+        <div>
+            <a data-toggle="collapse" href="#ownedDevices" aria-expanded="true" aria-controls="ownedDevices">
+                <span class="caret"></span> Owned devices
+            </a>
+            <ul class="devices-container collapse in" id="ownedDevices" aria-expanded="true">
+                @foreach (var device in user.OwnedDevices)
+                {
+                    <li>
+                        <span class="user-device @(device.Id == user?.SelectedDevice?.Id ? "selected" : string.Empty)">@Html.ActionLink(device.DisplayName, "GetDevice", new { id = device.Id })</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    <hr />
+}
+
+@if (Model.User?.SelectedDevice != null)
+{
+    var selectedDevice = Model.User?.SelectedDevice;
+
+    <br />
+
+    if (!string.IsNullOrEmpty(selectedDevice.DisplayName))
+    {
+        <div class="row">
+            <div class="col-md-2"><img src="~/Content/laptop_icon.png" class="center-block" style="margin: 8px" /></div>
+            <div class="col-md-10"><h3>@selectedDevice.DisplayName</h3></div>
+        </div>
+    }
+
+    <div>
+        <div>
+            <span>Compliance status: </span><span class="profile-value">@(selectedDevice.IsCompliant == null ? "[No data]" : (selectedDevice.IsCompliant.Value ? "Compliant" : "Not compliant"))</span>
+        </div>
+        <div>
+            <span>OS: </span><span class="profile-value">@(selectedDevice.Os ?? "[No data]")</span>
+        </div>
+        <div>
+            <span>OS Version: </span><span class="profile-value">@(selectedDevice.OsVersion ?? "[No data]")</span>
+        </div>
+        <div>
+            <span>Intune managed: </span><span class="profile-value">@(selectedDevice.IsIntuneManaged == null ? "[No data]" : (selectedDevice.IsIntuneManaged.Value ? "Yes" : "No"))</span>
+        </div>
+        <div>
+            <span>Approximate last sign-in: </span><span class="profile-value">@(selectedDevice.ApproximateLastSignIn == null ? "[No data]" : selectedDevice.ApproximateLastSignIn.Value.ToString())</span>
+        </div>
+    </div>
+    <hr />
+}
+else if (Model.Device != null)
+{
+    var device = Model.Device;
+
+    <br />
+
+    if (!string.IsNullOrEmpty(device.Fqdn))
+    {
+        <div class="row">
+            <div class="col-md-2"><img src="~/Content/laptop_icon.png" class="center-block" style="margin: 8px" /></div>
+            <div class="col-md-10"><h3>@device.Fqdn</h3></div>
+        </div>
+    }
+
+    <div>
+        <div>
+            <span>Azure AD joined: </span><span class="profile-value">@(device.IsAzureDomainJoined == null ? "[No data]" : (device.IsAzureDomainJoined.Value ? "Yes" : "No"))</span>
+        </div>
+        <div>
+            <span>Public IP Address (at alert): </span><span class="profile-value">@(device.PublicIpAddress ?? "[No data]")</span>
+        </div>
+        <div>
+            <span>Private IP Address (at alert): </span><span class="profile-value">@(device.PrivateIpAddress ?? "[No data]")</span>
+        </div>
+    </div>
+}

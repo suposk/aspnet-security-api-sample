@@ -1,0 +1,937 @@
+﻿@model MicrosoftGraph_Security_API_Sample.Models.ViewModels.AlertDetailsViewModel
+
+@using MicrosoftGraph_Security_API_Sample.Helpers
+
+@Styles.Render("~/Content/alert-details.css")
+
+<div class="details-main-wrapper">
+    <div class="details-row-wrapper">
+        <div class="value-pair title">
+            <div>Title</div>
+            <div class="@Model.Severity.ToLower()">@Model.Title</div>
+        </div>
+        @if (Model.CreatedDateTime.HasValue && !string.IsNullOrWhiteSpace(Model.CreatedDateTime.Value.ToString()))
+        {
+            <div class="value-pair">
+                <div>Created</div>
+                @StatisticHelper.CreateFilterActionLink(Html, Model.CreatedDateTime.ToString(), "alert:createddatetime", string.Concat(Model.CreatedDateTime.Value.ToString("s"), "Z"))
+            </div>
+        }
+        @if (Model.User != null || Model.Device != null)
+        {
+            <div class="value-pair non-shrink">
+                <div>User / Host</div>
+                <div>
+                    <div class="icon">
+                        <i class="far fa-user"></i>
+                    </div>
+                    @if (Model.User != null)
+                    {
+                        <div title="@Model.User.Email">
+                            @if (!string.IsNullOrWhiteSpace(Model.User.Upn))
+                            {
+                                @StatisticHelper.CreateFilterActionLink(Html, Model.User.DisplayName, "user:upn", Model.User.Upn)
+                            }
+                            else
+                            {
+                                @(Model.User.DisplayName)
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        @("Unknown")
+                    }
+                </div>
+                <div>
+                    <div class="icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    @if (Model.Device != null)
+                    {
+                        <div title="@Model.Device.Fqdn">
+                            @if (!string.IsNullOrWhiteSpace(Model.Device.Fqdn))
+                            {
+                                @StatisticHelper.CreateFilterActionLink(Html, Model.Device.DisplayName, "host:fqdn", Model.Device.Fqdn)
+                            }
+                            else
+                            {
+                                @(Model.Device.DisplayName)
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        @("Unknown")
+                    }
+                </div>
+            </div>
+        }
+        <div class="value-pair non-shrink">
+            <div>Status</div>
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Model.Status))
+                {
+                    @StatisticHelper.CreateFilterActionLink(Html, Model.Status, "alert:status", Model.Status)
+                }
+            </div>
+        </div>
+        <div class="value-pair non-shrink">
+            <div>Feedback</div>
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Model.Feedback))
+                {
+                    @StatisticHelper.CreateFilterActionLink(Html, Model.Feedback, "alert:feedback", Model.Feedback)
+                }
+            </div>
+        </div>
+        <div class="value-pair  non-shrink">
+            <div>Assigned to</div>
+            @if (Model.AssignedTo != null)
+            {
+                <div title="@(Model.AssignedTo.Email)">
+                    @if (!string.IsNullOrWhiteSpace(Model.AssignedTo.Upn))
+                    {
+                        @StatisticHelper.CreateFilterActionLink(Html, Model.AssignedTo.DisplayName, "alert:assignedto", Model.AssignedTo.Upn)
+                    }
+                    else
+                    {
+                        @(Model.AssignedTo.DisplayName)
+                    }
+                </div>
+            }
+            else
+            {
+                <div></div>
+            }
+        </div>
+    </div>
+
+  @*<div class="col-sm-12">
+        <div class="col-sm-6 float-left">
+            <div>Description</div>
+            <div>@Model.Description</div>
+        </div>
+        <div class="col-sm-3">
+            <div>ID</div>
+            <div>@Model.Id</div>
+        </div>
+        <div class="col-sm-3 non-shrink">
+            <div>Alert source</div>
+            <div>Vendor:&nbsp;&nbsp;@StatisticHelper.CreateFilterActionLink(Html, Model.Vendor.Vendor, "vendor:vendor", Model.Vendor.Vendor)</div>
+            <div>Provider:&nbsp;&nbsp;@StatisticHelper.CreateFilterActionLink(Html, Model.Vendor.Provider, "vendor:provider", Model.Vendor.Provider)</div>
+            @if (!string.IsNullOrWhiteSpace(Model.Vendor.SubProvider))
+            {
+                <div>SubProvider:&nbsp;&nbsp;@Model.Vendor.SubProvider</div>
+            }
+            <div>Version:&nbsp;&nbsp;@Model.Vendor.ProviderVersion</div>
+        </div>
+    </div>*@
+
+ <div class="details-row-wrapper">
+        <div class="value-pair">
+            <div>Description</div>
+            <div>@Model.Description</div>
+        </div>
+        <div class="value-pair break-word">
+            <div>ID</div>
+            <div>@Model.Id</div>
+        </div>
+        <div class="value-pair non-shrink">
+            <div>Alert source</div>
+            <div>Vendor:&nbsp;&nbsp;@StatisticHelper.CreateFilterActionLink(Html, Model.Vendor.Vendor, "vendor:vendor", Model.Vendor.Vendor)</div>
+            <div>Provider:&nbsp;&nbsp;@StatisticHelper.CreateFilterActionLink(Html, Model.Vendor.Provider, "vendor:provider", Model.Vendor.Provider)</div>
+            @if (!string.IsNullOrWhiteSpace(Model.Vendor.SubProvider))
+            {
+                <div>SubProvider:&nbsp;&nbsp;@Model.Vendor.SubProvider</div>
+            }
+            <div>Version:&nbsp;&nbsp;@Model.Vendor.ProviderVersion</div>
+        </div>
+  </div>
+
+    @if (Model.RecommendedActions != null)
+    {
+        <div class="details-row-wrapper">
+            <div class="value-pair">
+                <div>Recommended actions</div>
+                @if (Model.RecommendedActions.Count() > 0)
+                {
+                    foreach (string action in Model.RecommendedActions)
+                    {
+                        <div>@action</div>
+                    }
+                }
+                else
+                {
+                    <div>There are no items</div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Comments != null)
+    {
+        <div class="details-row-wrapper">
+            <div class="value-pair">
+                <div>Comments</div>
+                @if (Model.Comments.Count() > 0)
+                {
+                    foreach (string comment in Model.Comments)
+                    {
+                        <div>@comment</div>
+                    }
+                }
+                else
+                {
+                    <div>There are no comments</div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Triggers != null && Model.Triggers.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#trigger-list" role="button" aria-expanded="false" aria-controls="trigger-list">Triggers</a>
+            <div class="panel-collapse collapse out" id="trigger-list">
+                @foreach (var trigger in Model.Triggers)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(trigger.Name))
+                        {
+                            <div class="content-row">
+                                <span>Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, trigger.Name, "trigger:name", trigger.Name)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(trigger.Value))
+                        {
+                            <div class="content-row">
+                                <span>Value:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, trigger.Value, "trigger:value", trigger.Value)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(trigger.Type))
+                        {
+                            <div class="content-row">
+                                <span>Type:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, trigger.Type, "trigger:type", trigger.Type)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.SourceMaterials != null && Model.SourceMaterials.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#source-material-list" role="button" aria-expanded="false" aria-controls="source-material-list">Source Materials</a>
+            <div class="panel-collapse collapse out" id="source-material-list">
+                @foreach (var sourceMaterial in Model.SourceMaterials)
+                {
+                    if (!String.IsNullOrWhiteSpace(sourceMaterial))
+                    {
+                        <div class="item-container">
+                            <div class="content-row">
+                                <span></span><a href="@sourceMaterial" target="_blank">@sourceMaterial</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Users != null && Model.Users.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#user-list" role="button" aria-expanded="false" aria-controls="user-list">User accounts</a>
+            <div class="panel-collapse collapse out" id="user-list">
+                @foreach (var user in Model.Users)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(user.AccountName))
+                        {
+                            <div class="content-row">
+                                <span>Account Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.AccountName, "user:accountname", user.AccountName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.DomainName))
+                        {
+                            <div class="content-row">
+                                <span>Domain Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.DomainName, "user:domainname", user.DomainName)
+                            </div>
+                        }
+                        @if (user.EmailRole.HasValue && !string.IsNullOrWhiteSpace(user.EmailRole.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Email Role:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.EmailRole.Value.ToString(), "user:emailrole", user.EmailRole.Value.ToString())
+                            </div>
+                        }
+                        @if (user.IsVpn.HasValue && !string.IsNullOrWhiteSpace(user.IsVpn.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Is VPN:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.IsVpn.Value.ToString(), "user:isvpn", user.IsVpn.Value.ToString())
+                            </div>
+                        }
+                        @if (user.LogonDateTime.HasValue && !string.IsNullOrWhiteSpace(user.LogonDateTime.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Logon DateTime:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.LogonDateTime.Value.ToString(), "user:logondatetime", string.Concat(user.LogonDateTime.Value.ToString("s"), "Z"))
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.LogonId))
+                        {
+                            <div class="content-row">
+                                <span>Logon Id:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.LogonId, "user:logonid", user.LogonId)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.LogonIp))
+                        {
+                            <div class="content-row">
+                                <span>Logon IP:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.LogonIp, "user:logonip", user.LogonIp)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.LogonLocation))
+                        {
+                            <div class="content-row">
+                                <span>Logon Location:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.LogonLocation, "user:logonlocation", user.LogonLocation)
+                            </div>
+                        }
+                        @if (user.LogonType.HasValue && !string.IsNullOrWhiteSpace(user.LogonType.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Logon Type:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.LogonType.Value.ToString(), "user:logontype", user.LogonType.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.OnPremisesSecurityIdentifier))
+                        {
+                            <div class="content-row">
+                                <span>On Premises Security Identifier:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.OnPremisesSecurityIdentifier, "user:onpremisessecurityidentifier", user.OnPremisesSecurityIdentifier)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.RiskScore))
+                        {
+                            <div class="content-row">
+                                <span>Risk Score:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.RiskScore, "user:riskscore", user.RiskScore)
+                            </div>
+                        }
+                        @if (user.UserAccountType.HasValue && !string.IsNullOrWhiteSpace(user.UserAccountType.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>User Account Type:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.UserAccountType.Value.ToString(), "user:accounttype", user.UserAccountType.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(user.UserPrincipalName))
+                        {
+                            <div class="content-row">
+                                <span>User Principal Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, user.UserPrincipalName, "user:upn", user.UserPrincipalName)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Hosts != null && Model.Hosts.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#host-list" role="button" aria-expanded="false" aria-controls="host-list">Hosts</a>
+            <div class="panel-collapse collapse out" id="host-list">
+                @foreach (var host in Model.Hosts)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(host.Fqdn))
+                        {
+                            <div class="content-row">
+                                <span>Fqdn:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.Fqdn, "host:fqdn", host.Fqdn)
+                            </div>
+                        }
+                        @if (host.IsAzureAdJoined.HasValue && !string.IsNullOrWhiteSpace(host.IsAzureAdJoined.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Is AzureAD Joined:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.IsAzureAdJoined.Value.ToString(), "host:isazureadjoined", host.IsAzureAdJoined.Value.ToString())
+                            </div>
+                        }
+                        @if (host.IsAzureAdRegistered.HasValue && !string.IsNullOrWhiteSpace(host.IsAzureAdRegistered.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Is AzureAD Registered:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.IsAzureAdRegistered.Value.ToString(), "host:isazureadregistered", host.IsAzureAdRegistered.Value.ToString())
+                            </div>
+                        }
+                        @if (host.IsHybridAzureDomainJoined.HasValue && !string.IsNullOrWhiteSpace(host.IsHybridAzureDomainJoined.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Is Hybrid Azure Domain Joined:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.IsHybridAzureDomainJoined.Value.ToString(), "host:ishybridazuredomainjoined", host.IsHybridAzureDomainJoined.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(host.NetBiosName))
+                        {
+                            <div class="content-row">
+                                <span>NetBiosName:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.NetBiosName, "host:netbiosname", host.NetBiosName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(host.Os))
+                        {
+                            <div class="content-row">
+                                <span>OS:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.Os, "host:os", host.Os)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(host.PrivateIpAddress))
+                        {
+                            <div class="content-row">
+                                <span>Private IP Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.PrivateIpAddress, "host:privateipaddress", host.PrivateIpAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(host.PublicIpAddress))
+                        {
+                            <div class="content-row">
+                                <span>Public IP Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.PublicIpAddress, "host:publicipaddress", host.PublicIpAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(host.RiskScore))
+                        {
+                            <div class="content-row">
+                                <span>Risk Score:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, host.RiskScore, "host:riskscore", host.RiskScore)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.NetworkConnections != null && Model.NetworkConnections.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#network-connection-list" role="button" aria-expanded="false" aria-controls="network-connection-list">Network connections</a>
+            <div class="panel-collapse collapse out" id="network-connection-list">
+                @foreach (var connection in Model.NetworkConnections)
+                {
+                    <div class="item-container">
+                        @if (connection.Status.HasValue && !string.IsNullOrWhiteSpace(connection.Status.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Status:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.Status.Value.ToString(), "netconn:status", connection.Status.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.SourceAddress))
+                        {
+                            <div class="content-row">
+                                <span>Source Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.SourceAddress, "netconn:sourceaddress", connection.SourceAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.SourcePort))
+                        {
+                            <div class="content-row">
+                                <span>Source Port:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.SourcePort, "netconn:sourceport", connection.SourcePort)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.RiskScore))
+                        {
+                            <div class="content-row">
+                                <span>Risk Score:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.RiskScore, "netconn:riskscore", connection.RiskScore)
+                            </div>
+                        }
+                        @if (connection.Protocol.HasValue && !string.IsNullOrWhiteSpace(connection.Protocol.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Protocol:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.Protocol.Value.ToString(), "netconn:protocol", connection.Protocol.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.NatSourceAddress))
+                        {
+                            <div class="content-row">
+                                <span>Nat Source Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.NatSourceAddress, "netconn:natsourceaddress", connection.NatSourceAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.NatSourcePort))
+                        {
+                            <div class="content-row">
+                                <span>Nat Source Port:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.NatSourcePort, "netconn:natsourceport", connection.NatSourcePort)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.NatDestinationAddress))
+                        {
+                            <div class="content-row">
+                                <span>Nat Destination Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.NatDestinationAddress, "netconn:natdestinationaddress", connection.NatDestinationAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.NatDestinationPort))
+                        {
+                            <div class="content-row">
+                                <span>Nat Destination Port:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.NatDestinationPort, "netconn:natdestinationport", connection.NatDestinationPort)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.LocalDnsName))
+                        {
+                            <div class="content-row">
+                                <span>LocalDnsName:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.LocalDnsName, "netconn:localdnsname", connection.LocalDnsName)
+                            </div>
+                        }
+                        @if (connection.DomainRegisteredDateTime.HasValue && !string.IsNullOrWhiteSpace(connection.DomainRegisteredDateTime.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Domain Registered DateTime:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.DomainRegisteredDateTime.Value.ToString(), "netconn:domainregistereddatetime", string.Concat(connection.DomainRegisteredDateTime.Value.ToString("s"), "Z"))
+                            </div>
+                        }
+                        @if (connection.Direction.HasValue && !string.IsNullOrWhiteSpace(connection.Direction.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Direction:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.Direction.Value.ToString(), "netconn:direction", connection.Direction.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.DestinationUrl))
+                        {
+                            <div class="content-row">
+                                <span>Destination Url:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.DestinationUrl, "netconn:destinationurl", connection.DestinationUrl)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.DestinationDomain))
+                        {
+                            <div class="content-row">
+                                <span>Destination Domain:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.DestinationDomain, "netconn:destinationdomain", connection.DestinationDomain)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.DestinationAddress))
+                        {
+                            <div class="content-row">
+                                <span>Destination Address:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.DestinationAddress, "netconn:destinationaddress", connection.DestinationAddress)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.DestinationPort))
+                        {
+                            <div class="content-row">
+                                <span>Destination Port:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.DestinationPort, "netconn:destinationport", connection.DestinationPort)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.ApplicationName))
+                        {
+                            <div class="content-row">
+                                <span>Application Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.ApplicationName, "netconn:applicationname", connection.ApplicationName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(connection.UrlParameters))
+                        {
+                            <div class="content-row">
+                                <span>Url Parameters:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, connection.UrlParameters, "netconn:urlparameters", connection.UrlParameters)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Files != null && Model.Files.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#file-list" role="button" aria-expanded="false" aria-controls="file-list">Files</a>
+            <div class="panel-collapse collapse out" id="file-list">
+                @foreach (var file in Model.Files)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(file.Name))
+                        {
+                            <div class="content-row">
+                                <span>Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, file.Name, "file:name", file.Name)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(file.Path))
+                        {
+                            <div class="content-row">
+                                <span>Path:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, file.Path, "file:path", file.Path)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(file.RiskScore))
+                        {
+                            <div class="content-row">
+                                <span>Risk Score:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, file.RiskScore, "file:riskscore", file.RiskScore)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Processes != null && Model.Processes.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#process-list" role="button" aria-expanded="false" aria-controls="process-list">Processes</a>
+            <div class="panel-collapse collapse out" id="process-list">
+                @foreach (var process in Model.Processes)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(process.AccountName))
+                        {
+                            <div class="content-row">
+                                <span>Account Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.AccountName, "process:accountname", process.AccountName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(process.CommandLine))
+                        {
+                            <div class="content-row">
+                                <span>Command Line:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.CommandLine, "process:commandline", process.CommandLine)
+                            </div>
+                        }
+                        @if (process.CreatedDateTime.HasValue && !string.IsNullOrWhiteSpace(process.CreatedDateTime.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Created:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.CreatedDateTime.Value.ToString(), "process:createddatetime", string.Concat(process.CreatedDateTime.Value.ToString("s"), "Z"))
+                            </div>
+                        }
+                        @if (process.IntegrityLevel.HasValue && !string.IsNullOrWhiteSpace(process.IntegrityLevel.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Integrity Level:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.IntegrityLevel.Value.ToString(), "process:integritylevel", process.IntegrityLevel.Value.ToString())
+                            </div>
+                        }
+                        @if (process.IsElevated.HasValue && !string.IsNullOrWhiteSpace(process.IsElevated.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Is Elevated:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.IsElevated.Value.ToString(), "process:iselevated", process.IsElevated.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(process.Name))
+                        {
+                            <div class="content-row">
+                                <span>Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.Name, "process:name", process.Name)
+                            </div>
+                        }
+                        @if (process.ParentProcessId.HasValue && !string.IsNullOrWhiteSpace(process.ParentProcessId.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Parent Process Id:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.ParentProcessId.Value.ToString(), "process:parentprocessid", process.ParentProcessId.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(process.ParentProcessName))
+                        {
+                            <div class="content-row">
+                                <span>Parent Process Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.ParentProcessName, "process:parentprocessname", process.ParentProcessName)
+                            </div>
+                        }
+                        @if (process.ParentProcessCreatedDateTime.HasValue && !string.IsNullOrWhiteSpace(process.ParentProcessCreatedDateTime.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Parent Process Created:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.ParentProcessCreatedDateTime.Value.ToString(), "process:parentprocesscreateddatetime", string.Concat(process.ParentProcessCreatedDateTime.Value.ToString("s"), "Z"))
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(process.Path))
+                        {
+                            <div class="content-row">
+                                <span>Path:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.Path, "process:path", process.Path)
+                            </div>
+                        }
+                        @if (process.ProcessId.HasValue && !string.IsNullOrWhiteSpace(process.ProcessId.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>ProcessId:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, process.ProcessId.Value.ToString(), "process:processid", process.ProcessId.Value.ToString())
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.RegistryKeyUpdates != null && Model.RegistryKeyUpdates.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#key-update-list" role="button" aria-expanded="false" aria-controls="key-update-list">Registry Key Updates</a>
+            <div class="panel-collapse collapse out" id="key-update-list">
+                @foreach (var keyUpdate in Model.RegistryKeyUpdates)
+                {
+                    <div class="item-container">
+                        @if (keyUpdate.Hive.HasValue && !string.IsNullOrWhiteSpace(keyUpdate.Hive.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Hive:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.Hive.Value.ToString(), "regkeyupdate:hive", keyUpdate.Hive.Value.ToString())
+                            </div>
+                        }
+                        @if (keyUpdate.ValueType.HasValue && !string.IsNullOrWhiteSpace(keyUpdate.ValueType.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Value Type:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.ValueType.Value.ToString(), "regkeyupdate:valuetype", keyUpdate.ValueType.Value.ToString())
+                            </div>
+                        }
+                        @if (keyUpdate.Operation.HasValue && !string.IsNullOrWhiteSpace(keyUpdate.Operation.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Operation:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.Operation.Value.ToString(), "regkeyupdate:operation", keyUpdate.Operation.Value.ToString())
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.OldKey))
+                        {
+                            <div class="content-row">
+                                <span>Old Key:</span><
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.OldKey, "regkeyupdate:oldkey", keyUpdate.OldKey)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.OldValueName))
+                        {
+                            <div class="content-row">
+                                <span>Old Value Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.OldValueName, "regkeyupdate:oldvaluename", keyUpdate.OldValueName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.OldValueData))
+                        {
+                            <div class="content-row">
+                                <span>Old Value Data:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.OldValueData, "regkeyupdate:oldvaluedata", keyUpdate.OldValueData)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.Key))
+                        {
+                            <div class="content-row">
+                                <span>Key:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.Key, "regkeyupdate:key", keyUpdate.Key)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.ValueName))
+                        {
+                            <div class="content-row">
+                                <span>Value Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.ValueName, "regkeyupdate:valuename", keyUpdate.ValueName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(keyUpdate.ValueData))
+                        {
+                            <div class="content-row">
+                                <span>Value Data:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.ValueData, "regkeyupdate:valuedata", keyUpdate.ValueData)
+                            </div>
+                        }
+                        @if (keyUpdate.ProcessId.HasValue && !string.IsNullOrWhiteSpace(keyUpdate.ProcessId.Value.ToString()))
+                        {
+                            <div class="content-row">
+                                <span>Process Id:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, keyUpdate.ProcessId.Value.ToString(), "regkeyupdate:processid", keyUpdate.ProcessId.Value.ToString())
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.MalwareStates != null && Model.MalwareStates.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#malware-state-list" role="button" aria-expanded="false" aria-controls="malware-state-list">Malware States</a>
+            <div class="panel-collapse collapse out" id="malware-state-list">
+                @foreach (var malwareState in Model.MalwareStates)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(malwareState.Name))
+                        {
+                            <div class="content-row">
+                                <span>Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, malwareState.Name, "malware:name", malwareState.Name)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(malwareState.Category))
+                        {
+                            <div class="content-row">
+                                <span>Category:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, malwareState.Category, "malware:category", malwareState.Category)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(malwareState.Family))
+                        {
+                            <div class="content-row">
+                                <span>Family:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, malwareState.Family, "malware:family", malwareState.Family)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(malwareState.Severity))
+                        {
+                            <div class="content-row">
+                                <span>Severity:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, malwareState.Severity, "malware:severity", malwareState.Severity)
+                            </div>
+                        }
+                        @if (malwareState.WasRunning.HasValue)
+                        {
+                            <div class="content-row">
+                                <span>Was Running:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, malwareState.WasRunning.Value.ToString(), "regkeyupdate:wasrunning", malwareState.WasRunning.Value.ToString())
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.Tags != null && Model.Tags.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#tag-list" role="button" aria-expanded="false" aria-controls="tag-list">Tags</a>
+            <div class="panel-collapse collapse out" id="tag-list">
+                @foreach (var tag in Model.Tags)
+                {
+                    if (!string.IsNullOrWhiteSpace(tag))
+                    {
+                        <div class="item-container">
+                            <div class="content-row">
+                                <span></span>@StatisticHelper.CreateFilterActionLink(Html, tag, "tag:title", tag)
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.VulnerabilityStates != null && Model.VulnerabilityStates.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#vulnerability-list" role="button" aria-expanded="false" aria-controls="vulnerability-list">Vulnerability States</a>
+            <div class="panel-collapse collapse out" id="vulnerability-list">
+                @foreach (var vulnerabilityState in Model.VulnerabilityStates)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(vulnerabilityState.Cve))
+                        {
+                            <div class="content-row">
+                                <span>Cve:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, vulnerabilityState.Cve, "vulnerability:cve", vulnerabilityState.Cve)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(vulnerabilityState.Severity))
+                        {
+                            <div class="content-row">
+                                <span>Severity:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, vulnerabilityState.Severity, "vulnerability:severity", vulnerabilityState.Severity)
+                            </div>
+                        }
+                        @if (vulnerabilityState.WasRunning.HasValue)
+                        {
+                            <div class="content-row">
+                                <span>Was Running:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, vulnerabilityState.WasRunning.Value.ToString(), "vulnerability:wasrunning", vulnerabilityState.WasRunning.Value.ToString())
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.CloudAppStates != null && Model.CloudAppStates.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#cloud-app-list" role="button" aria-expanded="false" aria-controls="cloud-app-list">Cloud App Security States</a>
+            <div class="panel-collapse collapse out" id="cloud-app-list">
+                @foreach (var cloudAppState in Model.CloudAppStates)
+                {
+                    <div class="item-container">
+                        @if (!string.IsNullOrWhiteSpace(cloudAppState.DestinationServiceName))
+                        {
+                            <div class="content-row">
+                                <span>Destination Service Name:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, cloudAppState.DestinationServiceName, "cloudapp:destinationservicename", cloudAppState.DestinationServiceName)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(cloudAppState.DestinationServiceIp))
+                        {
+                            <div class="content-row">
+                                <span>Destination Service Ip:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, cloudAppState.DestinationServiceIp, "cloudapp:destinationserviceip", cloudAppState.DestinationServiceIp)
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(cloudAppState.RiskScore))
+                        {
+                            <div class="content-row">
+                                <span>Risk Score:</span>
+                                @StatisticHelper.CreateFilterActionLink(Html, cloudAppState.RiskScore, "cloudapp:riskscore", cloudAppState.RiskScore)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.DetectionIds != null && Model.DetectionIds.Count() > 0)
+    {
+        <div class="collapsed-item-wrapper">
+            <a class="collapsible-item collapsed" data-toggle="collapse" href="#detection-list" role="button" aria-expanded="false" aria-controls="detection-list">Detection Ids</a>
+            <div class="panel-collapse collapse out" id="detection-list">
+                @foreach (var id in Model.DetectionIds)
+                {
+                    if (!string.IsNullOrWhiteSpace(id))
+                    {
+                        <div class="item-container">
+                            <div class="content-row">
+                                <span></span>@StatisticHelper.CreateFilterActionLink(Html, id, "detection:id", id)
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>

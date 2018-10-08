@@ -1,0 +1,80 @@
+﻿.table.secure-control-header {
+    margin: 0;
+}
+
+.table.main-table th:first-child,
+.table.main-table th:nth-child(6),
+.table.main-table td:first-child,
+.table.main-table td:nth-child(6) {
+    width: 15%;
+}
+
+.table.main-table th:nth-child(2),
+.table.main-table td:nth-child(2),
+.table.main-table th:nth-child(4),
+.table.main-table td:nth-child(4),
+.table.main-table th:nth-child(5),
+.table.main-table td:nth-child(5) {
+    width: 10%;
+}
+
+.table.inner-table {
+    background: rgba(0,0,0,.07);
+    font-size: 13px;
+}
+
+.collapsed-table-row-wrapper {
+    position: relative;
+}
+
+    .collapsed-table-row-wrapper > .panel-collapse {
+        padding-left: 10%;
+        overflow-x: auto;
+    }
+
+    .collapsed-table-row-wrapper table {
+        margin: 0;
+    }
+
+    .collapsed-table-row-wrapper > a.collapsible-item {
+        position: absolute;
+        top: 10px;
+        left: -20px;
+        text-decoration: none;
+        color: cornflowerblue;
+        flex-shrink: 0;
+    }
+
+a.collapsible-item:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";
+    float: left;
+    margin-right: 5px;
+    color: cornflowerblue;
+}
+
+a.collapsible-item.collapsed:after {
+    content: "\e080";
+}
+
+div.collapsible-row-content {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+    div.collapsible-row-content:first-child {
+        margin-top: 5px;
+    }
+
+    div.collapsible-row-content.collapsible {
+        margin-left: -18px;
+    }
+
+        div.collapsible-row-content.collapsible > a {
+            text-decoration: none;
+            color: black;
+        }
+
+        div.collapsible-row-content.collapsible > .panel-collapse {
+            padding-left: 40px;
+        }

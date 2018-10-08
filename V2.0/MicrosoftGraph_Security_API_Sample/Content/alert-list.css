@@ -1,0 +1,37 @@
+﻿.list-main-wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 250px;
+    overflow-y: auto;
+    margin-left: 15px;
+}
+
+    .list-main-wrapper table tr > th {
+        color: gray;
+    }
+
+    .list-main-wrapper table tr > th,
+    .list-main-wrapper table tr > td {
+        font-size: 13px;
+    }
+
+.severity-wrapper {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+    .severity-wrapper > div:nth-child(2) {
+        text-transform: capitalize;
+        margin-left: 10px;
+    }
+
+.list-main-wrapper table td.time {
+    white-space: nowrap;
+}
+
+tr.selected {
+    background: lightskyblue;
+    color: black;
+}

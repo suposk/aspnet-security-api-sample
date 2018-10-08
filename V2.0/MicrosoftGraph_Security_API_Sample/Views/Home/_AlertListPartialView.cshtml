@@ -1,0 +1,54 @@
+﻿@model IEnumerable<MicrosoftGraph_Security_API_Sample.Models.AlertResultItemModel>
+
+@using MicrosoftGraph_Security_API_Sample.Models.ViewModels
+
+@{
+    var currentSelectedAlert = Session["CurrentAlert"] as AlertDetailsViewModel;
+    var selectedAlertId = currentSelectedAlert?.Id ?? String.Empty;
+}
+
+@Styles.Render("~/Content/alert-list.css")
+
+<h2>Matching alerts</h2>
+<div class="list-main-wrapper">
+    @if (Model?.Any() ?? false)
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="break-word">Title</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    @*<th class="break-word">Category</th>*@
+                    <th>Created DateTime</th>
+                    <th>Provider</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var alert in Model)
+                {
+                    <tr class="@(selectedAlertId.Equals(alert.Id, StringComparison.OrdinalIgnoreCase) ? "selected" : String.Empty)">
+                        <td class="break-word">@Html.ActionLink(alert.Title, "GetAlert", new { id = alert.Id })</td>
+                        <td>
+                            <div class="severity-wrapper">
+                                <div class="alert-level @alert.Severity.ToLower()">
+                                    <div></div><div></div><div></div>
+                                </div>
+                                <div>@alert.Severity</div>
+                            </div>
+                        </td>
+                        <td>@alert.Status</td>
+                        @*<td class="break-word">@alert.Category</td>*@
+                        <td class="time">@(alert.CreatedDateTime.HasValue ? alert.CreatedDateTime.Value.ToString("MM/dd/yyyy hh:mm tt") : "Unknown")</td>
+                        <td>@alert.Provider</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @("No matching alerts")
+    }
+</div>

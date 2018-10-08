@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MicrosoftGraph_Security_API_Sample.Models.SubscriptionResultModel>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <h2>Active Alert Subscriptions</h2>
+            <div>
+                This is the list of Graph Security API alert notification subscriptions that are currently active.
+            </div>
+        </div>
+        <div class="col-md-2 button-wrapper">
+            <button class="btn btn-primary form-control" onclick="window.open('/notification')">
+                <b>Notifications</b>
+            </button>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Subscription ID</th>
+                        <th>Resource URL</th>
+                        <th>Expiration DateTime</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var subscription in Model)
+                    {
+                        <tr>
+                            <td>@subscription.Id</td>
+                            <td>@subscription.Resource</td>
+                            <td>@subscription.ExpirationDateTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

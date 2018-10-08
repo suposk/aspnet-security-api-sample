@@ -1,0 +1,130 @@
+﻿@model MicrosoftGraph_Security_API_Sample.Models.DomainModels.SecureScoreModel
+
+@using MicrosoftGraph_Security_API_Sample.Models.ViewModels
+
+@Styles.Render("~/Content/subscribe.css")
+@Styles.Render("~/Content/secure-details.css")
+
+@{
+    var queries = Session["ResultQueries"] as ResultQueriesViewModel;
+}
+
+<div class="container-fluid">
+    <div class="container-fluid col-md-12">
+        <div class="row subscribe-main-wrapper">
+            <div class="col-md-12">
+                @*<div class="query-row-wrapper">
+                    <div class="" style="font-weight: bold;">C# SDK Query:</div>
+                    <div class="">`@(queries?.SDKQuery)`</div>
+                </div>*@
+                <div class="query-row-wrapper">
+                    <div class="" style="font-weight: bold;">REST Query:</div>
+                    <div class="">`@(@Html.Raw(queries?.RESTQuery ?? ""))`</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr style="width: 100%;" />
+
+    <div class="container-fluid col-md-12">
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-4">
+                <span class="bold-row">Secure Score:&#032;</span><span>@Model.CurrentScore</span>
+            </div>
+            <div class="col-md-3">
+                <span class="bold-row">Max Secure Score:&#032;</span><span>@Model.MaxScore</span>
+            </div>
+            <div class="col-md-5">
+                <span class="bold-row">Score Date:&#032;</span><span>@Model.CreatedDateTime</span>
+            </div>
+        </div>
+
+        <br />
+
+        <div><span class="bold-row">Enadled Services:&#032;</span><span>@(String.Join(", ", Model.EnabledServices))</span></div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-4">
+                <span class="bold-row">Licensed user count:&#032;</span><span>@Model.LicensedUserCount</span>
+            </div>
+            <div class="col-md-3">
+                <span class="bold-row">Active user count:&#032;</span><span>@Model.ActiveUserCount</span>
+            </div>
+            <div class="col-md-5">
+                <span class="bold-row">ID:&#032;</span><span>@Model.Id</span>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Secure Score Control Scores</h3>
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Category</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Score</th>
+                            <th>Count / Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var control in Model.ControlScores)
+                        {
+                            <tr>
+                                <td class="col-md-1">@control.ControlCategory</td>
+                                <td class="col-md-2">@control.Name</td>
+                                <td class="col-md-6">@control.Description</td>
+                                <td class="col-md-1">@control.Score.ToString("F")</td>
+                                <td class="col-md-2">
+                                    @if (control.ControlCategory.Equals("Devices", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        <div>On: @control.Count</div>
+                                        <div>InTune on: @control.Total</div>
+                                    }
+                                    else
+                                    {
+                                        <div>@control.Count / @control.Total</div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Average Comparative Scores</h3>
+                <table class="table table-striped table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Compare by</th>
+                            @*<th>Value</th>*@
+                            <th>Average Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var avarageScore in Model.AverageComparativeScores)
+                        {
+                            <tr>
+                                <td>@avarageScore.ComparedBy</td>
+                                @*<td>@avarageScore.Value</td>*@
+                                <td>@avarageScore.AverageScore.ToString("F")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

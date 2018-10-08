@@ -1,0 +1,36 @@
+﻿.subscribe-main-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+    .subscribe-main-wrapper > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+.query-row-wrapper {
+    display: flex;
+}
+
+    .query-row-wrapper:first-child {
+        margin-top: 5px;
+    }
+
+    .query-row-wrapper > div:first-child {
+        flex-shrink: 0;
+        width: 125px;
+        font-weight: bold;
+    }
+
+    .query-row-wrapper > div:last-child {
+        flex-grow: 1;
+        padding-right: 10px;
+        word-break: break-word;
+    }
+
+/* For IE and Edge */
+@supports (-ms-ime-align:auto) {
+    .query-row-wrapper > div:last-child {
+        word-break: break-all;
+    }
+}
