@@ -1,0 +1,119 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+
+@model MicrosoftGraph_Security_API_Sample.Models.ViewModels.AlertFilterViewModel
+
+@using MicrosoftGraph_Security_API_Sample.Models.ViewModels
+
+@Styles.Render("~/Content/subscribe.css")
+
+@{
+    var providerList = Session["ProviderList"] as string[];
+    var queries = Session["ResultQueries"] as ResultQueriesViewModel;
+}
+
+@using (Html.BeginForm("GetAlerts", "Home", FormMethod.Post))
+{
+    <h2>Select alerts to view</h2>
+
+    <div class="container-fluid">
+
+        <div class="row form-group">
+            <div class="col-md-2">
+                @Html.Label("Top X")
+                @Html.DropDownList("Top", new SelectList(new[] { "1", "5", "10", "20", "50" }, Model.Top), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.Label("Severity")
+                @Html.DropDownList("alert:severity", new SelectList(new[] { "All", "High", "Medium", "Low", "Informational" }, Model.Filters.GetFilterValue("alert:severity")), new { @class = "form-control" })
+            </div>
+
+            @* The ‘Category’ dropdown menu contains ‘hard-coded’ values for the demo alert categories,
+                as the value for this property is populated by each security provider, and is thus an open list.
+                It appears here to demonstrate filtering by alert category as part of triage or an investigation.*@
+            <div class="col-md-4">
+                @Html.Label("Category")
+                @Html.DropDownList("alert:category", new SelectList(new[] { "All", "abnormalDataAccess", "AnonymousAccessAnomaly", "blockedTraffic", "Command and  Control", "data", "Device Not In Compliance", "DoubleExtension", "exploit", "IDS", "impossibleLoginVelocity", "IPS", "KnownCredentialAccessTools", "loginVelocity", "Malicious_IP", "MANUAL", "Modified system binary discovered", "MONITORING", "nonCompliantDevice", "Petya", "repeatedActivityShare", "repeatedShareActivity", "riskyAnonymousIp", "ShadowCopyDelete", "Social Engineering", "SuspiciousActivity", "suspiciousPowerShell", "SuspiciousSystemProcess", "threat", "ThreatManagement", "unauthorizedAccess", "UnfamiliarLocation", "vulnerability", "wildfire" }, Model.Filters.GetFilterValue("alert:category")), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-4">
+                @Html.Label("Start DateTime")
+                @Html.Hidden("alert:startdatetime", Model.Filters.GetFilterValue("alert:startdatetime"), new { id = "StartDateTime" })
+                <div class="input-group date" id="start-datetime">
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+
+            <div class="col-md-4">
+                @Html.Label("Status")
+                @Html.DropDownList("alert:status", new SelectList(new[] { "All", "NewAlert", "InProgress", "Resolved" }, Model.Filters.GetFilterValue("alert:status")), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-4">
+                @Html.Label("Provider")
+                @Html.DropDownList("vendor:provider", new SelectList(providerList, Model.Filters.GetFilterValue("vendor:provider")), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-4">
+                @Html.Label("End DateTime")
+                @Html.Hidden("alert:enddatetime", Model.Filters.GetFilterValue("alert:enddatetime"), new { id = "EndDateTime" })
+                <div class="input-group date" id="end-datetime">
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-5">
+                @Html.Label("User Account")
+                @Html.TextBox("user:upn", Model.Filters.GetFilterValue("user:upn"), new { @class = "form-control", placeholder = "Enter User Principal Name (UPN)" })
+            </div>
+            <div class="col-md-5">
+                @Html.Label("Host Name")
+                @Html.TextBox("host:fqdn", Model.Filters.GetFilterValue("host:fqdn"), new { @class = "form-control", placeholder = "Enter Fully Qualified Domain Name" })
+            </div>
+            <div class="col-md-2 button-wrapper">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary form-control" type="submit" name="Action" value="GetAlerts">
+                    <b>Get alerts</b>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="container-fluid">
+        <div class="row subscribe-main-wrapper">
+            <div class="col-md-10">
+                <div class="query-row-wrapper">
+                    <div class="" style="font-weight: bold;">C# SDK Query:</div>
+                    <div class="">`@(queries?.SDKQuery)`</div>
+                </div>
+                <div class="query-row-wrapper">
+                    <div class="" style="font-weight: bold;">REST Query:</div>
+                    <div class="">`@(@Html.Raw(queries?.RESTQuery ?? ""))`</div>
+                </div>
+            </div>
+            <div class="col-md-2 button-wrapper">
+                <button class="btn btn-primary form-control" type="submit" name="Action" value="Subscribe">
+                    <b>Subscribe</b>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+}

@@ -1,0 +1,210 @@
+﻿/* Overriding default Bootstrap v3 headings */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 16px;
+}
+
+h3 {
+    font-size: 14px;
+}
+
+h4 {
+    font-size: 12px;
+}
+
+h5 {
+    font-size: 10px;
+}
+
+h6 {
+    font-size: 8px;
+}
+/* ----------------------------------------- */
+
+footer.container-fluid {
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+}
+
+/* Set padding to keep content from hitting the edges */
+main {
+    margin: 15px;
+    position: fixed;
+    top: 50px;
+    right: 0px;
+    bottom: 40px;
+    left: 0px;
+}
+
+div.container-fluid.main-page-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+    div.container-fluid.main-page-wrapper > hr {
+        width: 100%;
+    }
+
+    div.container-fluid.main-page-wrapper > .row {
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+
+        div.container-fluid.main-page-wrapper > .row > div {
+            display: flex;
+            flex-direction: column;
+        }
+
+            div.container-fluid.main-page-wrapper > .row > div > form {
+                flex-shrink: 0;
+            }
+
+
+.container-user-info {
+    margin-top: 10px;
+    color: gray;
+}
+
+    .container-user-info .user-info-title {
+        font-size: 16px;
+    }
+
+hr {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border-color: cornflowerblue;
+}
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+    .tab-container .tab-content {
+        overflow: auto;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    .tab-container > ul {
+        flex-shrink: 0;
+    }
+
+.nav-tabs > li > a {
+    border: 1px solid #ddd;
+    margin-right: 0;
+}
+
+
+.nav-tabs > li:not(.active) > a {
+    background: rgba(0,0,0,.03);
+}
+
+.nav-tabs > li > a,
+.nav-tabs > li > a:hover {
+    border: 1px solid #ddd;
+}
+
+.nav.nav-tabs > li {
+    padding: 0;
+}
+
+    .nav.nav-tabs > li > a {
+        text-align: center;
+    }
+
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+
+.profile-value {
+    color: #337ab7;
+}
+
+.profile-picture {
+    padding: 10px;
+}
+
+.profile-picture-placeholder {
+    min-width: 100px;
+    min-height: 100px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100px
+}
+
+*[data-toggle='collapse'].collapsed > .caret {
+    transform: rotate(-90deg);
+}
+
+ul.devices-container {
+    list-style-type: none;
+    padding-left: 10px
+}
+
+.float-left {
+    float: left
+}
+
+pre {
+    background: transparent;
+    word-wrap: break-word;
+    border: 0
+}
+
+.alert-details {
+    border: 1px solid rgb(221, 221,221);
+}
+
+.user-device {
+}
+
+    .user-device.selected > a {
+        padding: 3px;
+        background: #337ab7;
+        color: #ffffff;
+    }
+
+/* Common styles */
+.button-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .button-wrapper > .btn.btn-primary {
+        width: 120px;
+    }
+
+.break-word {
+    word-break: break-word;
+}
+
+.bold-row {
+    font-weight: bold;
+}

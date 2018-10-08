@@ -1,0 +1,141 @@
+﻿@model IEnumerable<MicrosoftGraph_Security_API_Sample.Models.DomainModels.SecureScoreControlProfileModel>
+
+@Styles.Render("~/Content/secure-details.css")
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Secure Score Control Profiles</h2>
+            <div>
+                Drill down into the Secure Score Control Profiles and monitor corrective actions.
+            </div>
+            <hr />
+            <table class="table secure-control-header main-table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Control</th>
+                        <th>Rank</th>
+                        <th>Title</th>
+                        <th>Max Score</th>
+                        <th>User Impact</th>
+                        <th>Implementation Cost</th>
+                    </tr>
+                </thead>
+            </table>
+            @foreach (var profile in Model)
+            {
+                var uniqueProfileSuffix = $"-{profile.ControlCategory.Trim().Replace(' ', '-')}-{profile.Title.Trim().Replace(' ', '-')}";
+
+                <div class="collapsed-table-row-wrapper">
+                    <table class="table main-table">
+                        <tbody>
+                            <tr>
+                                <td>@profile.ControlCategory</td>
+                                <td>@profile.Rank</td>
+                                <td>@profile.Title</td>
+                                <td>@profile.MaxScore</td>
+                                <td>@profile.UserImpact</td>
+                                <td>@profile.ImplementationCost</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <a class="collapsible-item collapsed" data-toggle="collapse" href="#@($"{profile.ControlCategory}-update-list")" role="button" aria-expanded="false" aria-controls="@($"{profile.ControlCategory}-update-list")"></a>
+                    <div class="panel-collapse collapse out" id="@($"{profile.ControlCategory}-update-list")">
+
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Last Modified:&#032;</span>
+                            <span>@profile.LastModifiedDateTime</span>
+                        </div>
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Action URL:&#032;</span>
+                            <a href="@profile.ActionUrl" target="_blank">@profile.ActionUrl</a>
+                        </div>
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Deprecated:&#032;</span>
+                            <span>@(profile.Deprecated.HasValue ? profile.Deprecated.Value.ToString() : string.Empty)</span>
+                        </div>
+                        <div class="collapsible-row-content collapsible">
+                            <a class="collapsible-item collapsed bold-row" data-toggle="collapse" href="#remediation@(uniqueProfileSuffix)" role="button" aria-expanded="false" aria-controls="remediation@(uniqueProfileSuffix)">Remediation</a>
+                            <div class="panel-collapse collapse out" id="remediation@(uniqueProfileSuffix)">
+                                @(profile.Remediation)
+                            </div>
+                        </div>
+                        <div class="collapsible-row-content collapsible">
+                            <a class="collapsible-item collapsed bold-row" data-toggle="collapse" href="#remediation-impact@(uniqueProfileSuffix)" role="button" aria-expanded="false" aria-controls="remediation-impact@(uniqueProfileSuffix)">Remediation Impact</a>
+                            <div class="panel-collapse collapse out" id="remediation-impact@(uniqueProfileSuffix)">
+                                @(profile.RemediationImpact)
+                            </div>
+                        </div>
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Service:&#032;</span>
+                            <span>@profile.Service</span>
+                        </div>
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Azure Tenant Id:&#032;</span>
+                            <span>@profile.AzureTenantId</span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(profile.TenantSetState))
+                        {
+                            <div class="collapsible-row-content">
+                                <span class="bold-row">Tenant Set State:&#032;</span>
+                                <span>@profile.TenantSetState</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(profile.TenantNote))
+                        {
+                            <div class="collapsible-row-content">
+                                <span class="bold-row">Tenant Note:&#032;</span>
+                                <span>@profile.TenantNote</span>
+                            </div>
+                        }
+                        <div class="collapsible-row-content">
+                            <span class="bold-row">Tier:&#032;</span>
+                            <span>@profile.Tier</span>
+                        </div>
+                        <div class="collapsible-row-content collapsible">
+                            <a class="collapsible-item collapsed bold-row" data-toggle="collapse" href="#threat-list@(uniqueProfileSuffix)" role="button" aria-expanded="false" aria-controls="threat-list@(uniqueProfileSuffix)">Threats</a>
+                            <div class="panel-collapse collapse out" id="threat-list@(uniqueProfileSuffix)">
+                                @foreach (var threat in profile.Threats)
+                                {
+                                    <div>@threat</div>
+                                }
+                            </div>
+                        </div>
+
+                        @if (profile.SecureStateUpdates != null && profile.SecureStateUpdates.Count() > 0)
+                        {
+                            <table class="table table-striped inner-table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>AssignedTo</th>
+                                        <th>State</th>
+                                        <th>Comment</th>
+                                        <th>Updated by</th>
+                                        <th>Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var update in profile.SecureStateUpdates)
+                                    {
+                                        <tr>
+                                            <td title="@(!string.IsNullOrWhiteSpace(update.UpnAssignedTo) ? update.UpnAssignedTo : string.Empty)">
+                                                @(!string.IsNullOrWhiteSpace(update.AssignTo) ? update.AssignTo : string.Empty)
+                                            </td>
+                                            <td>@(!string.IsNullOrWhiteSpace(update.State) ? update.State : string.Empty)</td>
+                                            <td>@(!string.IsNullOrWhiteSpace(update.Comment) ? update.Comment : string.Empty)</td>
+                                            <td title="@(!string.IsNullOrWhiteSpace(update.UpnUpdatedBy) ? update.UpnUpdatedBy : string.Empty)">
+                                                @(!string.IsNullOrWhiteSpace(update.UpdatedBy) ? update.UpdatedBy : string.Empty)
+                                            </td>
+                                            <td>@(!string.IsNullOrWhiteSpace(update.UpdatedDateTime) ? update.UpdatedDateTime : string.Empty)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

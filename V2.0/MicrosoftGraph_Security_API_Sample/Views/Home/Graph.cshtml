@@ -1,0 +1,109 @@
+﻿<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+        See LICENSE in the source repository root for complete license information. -->
+@using Resources
+@using Newtonsoft.Json;
+@using MicrosoftGraph_Security_API_Sample.Models.ViewModels;
+@using MicrosoftGraph_Security_API_Sample.Models;
+@using System.Text
+
+@{
+    ViewBag.Title = Resource.App_Name;
+    var alertFilters = Session["AlertFilters"] as AlertFilterViewModel;
+    var alertSearchResult = Session["AlertSearchResult"] as IEnumerable<AlertResultItemModel>;
+    var createSubscriptionResult = Session["CreateSubscriptionResult"] as SubscriptionResultModel;
+    var alertStatistic = Session["AlertStatistic"] as AlertStatisticViewModel;
+    var secureDetails = Session["SecureDetails"] as SecureScoreDetailsViewModel;
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#start-datetime').datetimepicker({
+                //date: new Date($("#StartDateTime").val() || moment().format("MM/DD/YYYY"))
+                date: new Date($("#StartDateTime").val() || "")
+            });
+            $('#end-datetime').datetimepicker({
+                date: new Date($("#EndDateTime").val() || ""),
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#start-datetime").on("dp.change", function (e) {
+                var hiddenStartDateItem = $("#StartDateTime");
+                if (!hiddenStartDateItem.val()) {
+                    // Reset time only
+                    e.date.hours(0);
+                    e.date.minutes(0);
+                    e.date.seconds(0);
+                    e.date.milliseconds(0);
+                    $(this).data("DateTimePicker").date(e.date);
+                }
+
+                $('#end-datetime').data("DateTimePicker").minDate(e.date);
+                var selectedDate = e.date ? e.date.toISOString() : "";
+                hiddenStartDateItem.val(selectedDate);
+            });
+            $("#end-datetime").on("dp.change", function (e) {
+                var hiddenEndtDateItem = $("#EndDateTime");
+                if (!hiddenEndtDateItem.val()) {
+                    // Reset time only
+                    e.date.hours(0);
+                    e.date.minutes(0);
+                    e.date.seconds(0);
+                    e.date.milliseconds(0);
+                    $(this).data("DateTimePicker").date(e.date);
+                }
+
+                var startDateTimePicker = $('#start-datetime');
+                startDateTimePicker.data("DateTimePicker").maxDate(e.date);
+                !startDateTimePicker.data("DateTimePicker").date() && startDateTimePicker.data("DateTimePicker").clear();
+
+                var selectedDate = e.date ? e.date.toISOString() : "";
+                hiddenEndtDateItem.val(selectedDate);
+            });
+        });
+    </script>
+}
+
+<div class="container-fluid main-page-wrapper">
+
+    @if (Request.IsAuthenticated && alertStatistic != null)
+    {
+        <hr />
+        @Html.Partial("_StatisticPartialView", alertStatistic)
+        <hr />
+    }
+
+    <div class="row" style="overflow-y:auto;">
+        <div class="col-md-6">
+            @if (secureDetails != null)
+            {
+                if (secureDetails.TopSecureScore == null)
+                {
+                    <div>There is no data about top secure score</div>
+                }
+                else
+                {
+                    @Html.Partial("_SecureScoreDetailsPartialView", secureDetails.TopSecureScore)
+                }
+            }
+            else
+            {
+                @Html.Partial("_FilterPartialView", alertFilters);
+
+                if (Request.IsAuthenticated)
+                {
+                    if (alertSearchResult != null)
+                    {
+                        @Html.Partial("_AlertListPartialView", alertSearchResult)
+                    }
+                    else if (createSubscriptionResult != null)
+                    {
+                        @Html.Partial("_SubscriptionDetailsPartialView", createSubscriptionResult)
+                    }
+                }
+            }
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("_NavTabsPartialView")
+        </div>
+    </div>
+</div>

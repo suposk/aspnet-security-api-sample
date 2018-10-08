@@ -1,0 +1,98 @@
+﻿@model  MicrosoftGraph_Security_API_Sample.Models.ViewModels.ManageAlertViewModel
+
+@if (Model.UpdateAlertResult != null)
+{
+    var updateAlertResults = Model.UpdateAlertResult;
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @if (updateAlertResults != null)
+                {
+                    if (!string.IsNullOrEmpty(updateAlertResults.Error))
+                    {
+                        @updateAlertResults.Error
+                    }
+                    else
+                    {
+                        if (updateAlertResults.Before != null)
+                        {
+                            <h3>Original alert details</h3>
+                            <table class="table table-striped alert-details" cellpadding="10">
+                                <thead>
+                                    <tr><th>Property</th><th>Details</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Title</td><td>@updateAlertResults.Before.Title</td></tr>
+                                    <tr><td>Category</td><td>@updateAlertResults.Before.Category</td></tr>
+                                    <tr><td>Severity</td><td>@updateAlertResults.Before.Severity</td></tr>
+                                    <tr><td>Status</td><td>@updateAlertResults.Before.Status</td></tr>
+                                    <tr><td>Feedback</td><td>@updateAlertResults.Before.Feedback</td></tr>
+                                    <tr><td>Provider</td><td>@updateAlertResults.Before.Provider</td></tr>
+                                    <tr><td>Assigned To</td><td>@updateAlertResults.Before.AssignedTo</td></tr>
+                                    <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.Before.Comments)</td></tr>
+                                </tbody>
+                            </table>
+                        }
+                        if (updateAlertResults.After != null)
+                        {
+                            <hr />
+                            <h3>Updated alert details</h3>
+                            <table class="table table-striped alert-details" cellpadding="10">
+                                <thead>
+                                    <tr><th>Property</th><th>Details</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Title</td><td>@updateAlertResults.After.Title</td></tr>
+                                    <tr><td>Category</td><td>@updateAlertResults.After.Category</td></tr>
+                                    <tr><td>Severity</td><td>@updateAlertResults.After.Severity</td></tr>
+                                    <tr><td>Status</td><td>@updateAlertResults.After.Status</td></tr>
+                                    <tr><td>Feedback</td><td>@updateAlertResults.After.Feedback</td></tr>
+                                    <tr><td>Provider</td><td>@updateAlertResults.After.Provider</td></tr>
+                                    <tr><td>Assigned To</td><td>@updateAlertResults.After.AssignedTo</td></tr>
+                                    <tr><td>Comments</td><td>@Html.Raw(@updateAlertResults.After.Comments)</td></tr>
+                                </tbody>
+                            </table>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    var commentsAsString = Model.CurrentAlert.Comments != null && Model.CurrentAlert.Comments.Count() > 0 ? String.Join(Environment.NewLine, Model.CurrentAlert.Comments) : "";
+    using (Html.BeginForm("UpdateAlert", "Home", FormMethod.Post))
+    {
+        <h2>Select alerts to view</h2>
+        <div class="container-fluid">
+            <div class="row form-group">
+                @Html.Hidden("AlertId", Model.CurrentAlert.Id)
+
+                <div class="col-md-3">
+                    @Html.Label("Update status")
+                    @Html.DropDownList("NewStatus", new SelectList(new[] { "NewAlert", "InProgress", "Resolved", "Unknown" }, Model.CurrentAlert.Status), new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-3">
+                    @Html.Label("Feedback")
+                    @Html.DropDownList("NewFeedback", new SelectList(new[] { "Unknown", "TruePositive", "FalsePositive" }, Model.CurrentAlert.Feedback), new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-6">
+                    @Html.Label("Comments")
+                    @Html.TextArea("NewComments", commentsAsString, new { @class = "form-control", rows = 2, cols = 25, placeholder = "Enter comments" })
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-md-2 button-wrapper">
+                    <label>&nbsp;</label>
+                    <button class="btn btn-primary form-control" type="submit">
+                        <b>Update</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+}

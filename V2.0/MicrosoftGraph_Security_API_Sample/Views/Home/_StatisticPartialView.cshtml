@@ -1,0 +1,55 @@
+﻿@model  MicrosoftGraph_Security_API_Sample.Models.AlertStatisticViewModel
+
+@using MicrosoftGraph_Security_API_Sample.Helpers
+
+@Styles.Render("~/Content/statistic.css")
+
+<div class="stat-main-wrapper">
+    <div class="score-wrapper button-wrapper">
+        <h2 class="text-center">Secure Score</h2>
+        <h2 class="text-center">
+            @if (@Model.SecureScore != null)
+            {
+                <span>@Model.SecureScore.Current</span>@(" / ")<span>@Model.SecureScore.Max</span>
+            }
+            else
+            {
+                <span>There is no data</span>
+            }
+        </h2>
+        @Html.ActionLink("Secure Scores", "GetSecureDetails", "Home", new { @class = "btn btn-primary form-control" })
+    </div>
+    <div class="stat-column-wrapper">
+        <div class="column active-alerts">
+            <h2>Active alerts</h2>
+            @foreach (var level in Model.ActiveAlerts)
+            {
+                <div class="stat-row stat-sm-row">
+                    <div class="alert-level @level.Key.ToLower()">
+                        <div></div><div></div><div></div>
+                    </div>
+                    <div class="full-width">
+                        @StatisticHelper.CreateFilterActionLink(Html, level.Key.ToLower(), "alert:severity", level.Key.ToLower())
+                    </div>
+                    <div class="amount">@level.Value</div>
+                </div>
+            }
+        </div>
+        <div class="column">
+            <h2>Users at risk</h2>
+            @StatisticHelper.CreateStatisticColumn(Html, Model.UsersWithTheMostAlerts, "user:upn", "far fa-user")
+        </div>
+        @*<div class="column">
+             <h2>IP addresses at risk</h2>
+             @StatisticHelper.CreateStatisticColumn(Html, Model.IPWithTheMostAlerts, "host:privateipaddress", "far fa-user")
+            </div>*@
+        <div class="column">
+            <h2>Hosts at risk</h2>
+            @StatisticHelper.CreateStatisticColumn(Html, Model.HostsWithTheMostAlerts, "host:fqdn", "fas fa-laptop")
+        </div>
+        <div class="column">
+            <h2>Providers with the most alerts</h2>
+            @StatisticHelper.CreateStatisticColumn(Html, Model.ProvidersWithTheMostAlerts, "vendor:provider", "far fa-window-restore")
+        </div>
+    </div>
+</div>

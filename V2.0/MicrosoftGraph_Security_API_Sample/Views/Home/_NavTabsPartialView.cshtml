@@ -1,0 +1,139 @@
+﻿﻿
+<!--  Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+       See LICENSE in the source repository root for complete license information. -->
+
+@using MicrosoftGraph_Security_API_Sample.Models.ViewModels
+@using MicrosoftGraph_Security_API_Sample.Models
+@using Microsoft.Graph
+
+@{
+    ViewBag.Title = "Alert Details";
+
+    var currentAlert = Session["CurrentAlert"] as AlertDetailsViewModel;
+    var alertResults = Session["AlertSearchResult"] as IEnumerable<AlertResultItemModel>;
+    var subscriptionResult = Session["SubscriptionResult"] as SubscriptionResultModel;
+    var updateAlertResults = Session["UpdateAlertResult"] as UpdateAlertResultModel;
+    var subscriptionCollection = Session["SubscriptionCollection"] as IEnumerable<SubscriptionResultModel>;
+    var secureDetails = Session["SecureDetails"] as SecureScoreDetailsViewModel;
+
+
+    var currentTab = "alert-details";
+    if (alertResults != null || currentAlert != null)
+    {
+        currentTab = "alert-details";
+    }
+    if (updateAlertResults != null)
+    {
+        currentTab = "manage-alert";
+    }
+    else if (currentAlert?.User?.SelectedDevice != null)
+    {
+        currentTab = "user-hosts";
+    }
+    else if (subscriptionCollection != null)
+    {
+        currentTab = "subscription-list";
+    }
+    else if (secureDetails != null)
+    {
+        currentTab = "securescore-list";
+    }
+}
+
+<div class="tab-container">
+    <!-- Second level tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="@(currentTab == "alert-details" ? "active" : string.Empty)">
+            <a href="#alert-details" aria-controls="alert-details" role="tab" data-toggle="tab">Alert details</a>
+        </li>
+        <li role="presentation" class="@(currentTab == "user-hosts" ? "active" : string.Empty)">
+            <a href="#user-hosts" aria-controls="user-hosts" role="tab" data-toggle="tab">User &amp; Hosts</a>
+        </li>
+        <li role="presentation" class="@(currentTab == "manage-alert" ? "active" : string.Empty)">
+            <a href="#manage-alert" aria-controls="manage-alert" role="tab" data-toggle="tab">Manage alert</a>
+        </li>
+        @if (subscriptionCollection == null)
+        {
+            <li role="presentation">
+                @Html.ActionLink("Subscriptions", "GetSubscriptions", "Home")
+            </li>
+        }
+        else
+        {
+            <li role="presentation" class="@(currentTab == "subscription-list" ? "active" : string.Empty)">
+                <a href="#subscription-list" aria-controls="subscription-list" role="tab" data-toggle="tab">Subscriptions</a>
+            </li>
+        }
+        @if (secureDetails == null || secureDetails.SecureScoreControlProfiles == null)
+        {
+            <li role="presentation">
+                @Html.ActionLink("Control Scores", "GetSecureDetails", "Home")
+            </li>
+        }
+        else
+        {
+            <li role="presentation" class="@(currentTab == "securescore-list" ? "active" : string.Empty)">
+                <a href="#securescore-list" aria-controls="securescore-list" role="tab" data-toggle="tab">Control Scores</a>
+            </li>
+        }
+    </ul>
+    <div class="tab-content">
+        <!-- Tabs content -->
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="alert-details" ? "active in" : string.Empty)" id="alert-details">
+            @if (!Request.IsAuthenticated || currentAlert == null)
+            {
+                <span>No alert selected</span>
+            }
+            else
+            {
+                @Html.Partial("_AlertDetailsPartialView", currentAlert)
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="user-hosts" ? "active in" : string.Empty)" id="user-hosts">
+            @if (!Request.IsAuthenticated || currentAlert == null)
+            {
+                <span>No alert selected</span>
+            }
+            else if ((currentAlert?.User == null && currentAlert?.Device == null))
+            {
+                <span>There is no data</span>
+            }
+            else
+            {
+                @Html.Partial("_UserHostsPartialView", currentAlert)
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="manage-alert" ? "active in" : string.Empty)" id="manage-alert">
+            @if (!Request.IsAuthenticated || currentAlert == null)
+            {
+                <span>No alert selected</span>
+            }
+            else
+            {
+                @Html.Partial("_ManageAlertPartialView", new ManageAlertViewModel { CurrentAlert = currentAlert, UpdateAlertResult = updateAlertResults })
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="subscription-list" ? "active in" : string.Empty)" id="subscription-list">
+            @if (subscriptionCollection == null || subscriptionCollection.Count() < 1)
+            {
+                <span>There are no active subscriptions</span>
+            }
+            else
+            {
+                @Html.Partial("_SubscriptionListPartialView", subscriptionCollection)
+            }
+
+        </div>
+        <div role="tabpanel" class="tab-pane fade @(currentTab=="securescore-list" ? "active in" : string.Empty)" id="securescore-list">
+            @if (secureDetails?.SecureScoreControlProfiles == null || secureDetails.SecureScoreControlProfiles.Count() < 1)
+            {
+                <span>There are no secure score control profiles.</span>
+            }
+            else
+            {
+                @Html.Partial("_SecureScoreControlProfileListPartialView", secureDetails.SecureScoreControlProfiles)
+            }
+
+        </div>
+    </div>
+</div>
