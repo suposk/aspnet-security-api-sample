@@ -9,8 +9,6 @@
  *
  */
 
-/// <reference path="Scripts/jquery-2.2.3.js" />
-/// <reference path="jquery.signalR.version.js" />
 (function ($, window, undefined) {
 
     var resources = {

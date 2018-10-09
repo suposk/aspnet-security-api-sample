@@ -10,7 +10,6 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using System.Configuration;
-using System.Web.Mvc;
 using System.Threading.Tasks;
 using MicrosoftGraph_Security_API_Sample.TokenStorage;
 using System.IdentityModel.Tokens;
@@ -35,7 +34,7 @@ namespace MicrosoftGraph_Security_API_Sample
 
         public static string UserScopes = string.Empty;
 
-        public async void ConfigureAuth(IAppBuilder app)
+        public void ConfigureAuth(IAppBuilder app)
         {
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
