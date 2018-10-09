@@ -113,6 +113,10 @@
     }
 
     .stat-lg-row > div.value.informational {
+        border-left-color: gray;
+    }
+
+    .stat-lg-row > div.value.unknown {
         border-left-color: lightgray;
     }
 
@@ -153,5 +157,9 @@
     }
 
     .alert-level.informational > div {
+        background: gray;
+    }
+
+    .alert-level.unknown > div {
         background: lightgray;
     }

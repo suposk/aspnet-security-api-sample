@@ -87,6 +87,10 @@
         }
 
         .value-pair.title > div.informational {
+            border-left-color: gray;
+        }
+
+        .value-pair.title > div.unknown {
             border-left-color: lightgray;
         }
 

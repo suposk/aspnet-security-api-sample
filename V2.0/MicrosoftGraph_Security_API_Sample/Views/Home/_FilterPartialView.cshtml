@@ -26,7 +26,7 @@
 
             <div class="col-md-2">
                 @Html.Label("Severity")
-                @Html.DropDownList("alert:severity", new SelectList(new[] { "All", "High", "Medium", "Low", "Informational" }, Model.Filters.GetFilterValue("alert:severity")), new { @class = "form-control" })
+                @Html.DropDownList("alert:severity", new SelectList(new[] { "All", "High", "Medium", "Low", "Informational", "Unknown" }, Model.Filters.GetFilterValue("alert:severity")), new { @class = "form-control" })
             </div>
 
             @* The ‘Category’ dropdown menu contains ‘hard-coded’ values for the demo alert categories,

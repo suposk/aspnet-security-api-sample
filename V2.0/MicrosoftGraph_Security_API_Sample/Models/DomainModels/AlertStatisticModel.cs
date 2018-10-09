@@ -16,7 +16,8 @@ namespace MicrosoftGraph_Security_API_Sample.Models.DomainModels
         High,
         Medium,
         Low,
-        Informational
+        Informational,
+        Unknown
     }
 
     public class AlertStatisticModel
