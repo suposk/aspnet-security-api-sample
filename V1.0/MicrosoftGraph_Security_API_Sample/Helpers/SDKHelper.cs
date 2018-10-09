@@ -15,7 +15,7 @@ namespace MicrosoftGraph_Security_API_Sample.Helpers
         // Get an authenticated Microsoft Graph Service client.
         public static GraphServiceClient GetAuthenticatedClient()
         {
-            GraphServiceClient graphClient = new GraphServiceClient(
+             graphClient = new GraphServiceClient(
                 new DelegateAuthenticationProvider(
                     async (requestMessage) =>
                     {

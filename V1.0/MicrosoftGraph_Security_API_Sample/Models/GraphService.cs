@@ -337,7 +337,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                     return await graphClient.Security.Alerts.Request().Filter(filteredQuery).Top(filters.Top.Value).GetAsync();
 
                 }
-                catch (Exception e)
+                catch
                 {
                     return null;
                 }
@@ -410,7 +410,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
             {
                 return await graphClient.Subscriptions.Request().GetAsync();
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

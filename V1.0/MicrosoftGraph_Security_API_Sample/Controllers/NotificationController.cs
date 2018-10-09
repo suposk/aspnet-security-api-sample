@@ -4,32 +4,28 @@
  */
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Security.Claims;
 using MicrosoftGraph_Security_API_Sample.Models;
 using MicrosoftGraph_Security_API_Sample.SignalR;
 using MicrosoftGraph_Security_API_Sample.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using System.Security.Claims;
 
 namespace MicrosoftGraph_Security_API_Sample.Controllers
 {
-    using MicrosoftGraph_Security_API_Sample.SignalR;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Web;
-
     public class NotificationController : Controller
     {
-        public ActionResult LoadView()
+        public ActionResult Index()
         {
-            ViewBag.CurrentUserId = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;
-            return View("Notification");
+            this.ViewBag.CurrentUserId = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier")?.Value;
+            return this.View("Notification");
         }
 
         /// <summary>
@@ -39,19 +35,19 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
         [HttpPost]
         public async Task<ActionResult> Listen()
         {
-
             // Validate the new subscription by sending the token back to Microsoft Graph.
             // This response is required for each subscription.
+            // Parse the received notifications.
             if (Request.QueryString["validationToken"] != null)
             {
                 var token = Request.QueryString["validationToken"];
-                return Content(token, "plain/text");
+                return this.Content(token, "plain/text");
             }
-
-            // Parse the received notifications.
             else
             {
-                
+                NotificationService notificationService = new NotificationService();
+                List<NotificationViewModel> messages = new List<NotificationViewModel>();
+
                 try
                 {
                     string documentContents;
@@ -63,29 +59,26 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                         }
 
                         var notifications = JsonConvert.DeserializeObject<NotificationCollection>(documentContents);
-                        Notification notifcation = notifications.Value.FirstOrDefault();
-                        notifcation.EntityId = notifcation.ResourceData.Id;
-                        List<NotificationViewModel> messages = new List<NotificationViewModel>();
-                        NotificationViewModel messageViewModel = new NotificationViewModel(notifcation, notifcation.SubscriptionId);
-                        messages.Add(messageViewModel);
-
-                        NotificationService notificationService = new NotificationService();
-                        notificationService.SendNotificationToClient(messages);
-
+                        foreach (Notification notification in notifications.Value)
+                        {
+                            notification.EntityId = notification.ResourceData.Id;
+                            NotificationViewModel messageViewModel = new NotificationViewModel(notification, notification.SubscriptionId);
+                            messages.Add(messageViewModel);
+                        }
+                        if (messages.Count > 0)
+                        {
+                            notificationService.SendNotificationToClient(messages);
+                        }
                     }
-                
-                    }
+                }
                 catch (Exception)
                 {
-
                     // TODO: Handle the exception.
                     // Still return a 202 so the service doesn't resend the notification.
                 }
 
-
-
-                return new HttpStatusCodeResult(202);
+                return await Task.FromResult<ActionResult>(new HttpStatusCodeResult(202));
             }
-        }  
+        }
     }
 }

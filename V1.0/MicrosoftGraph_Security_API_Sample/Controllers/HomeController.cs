@@ -6,16 +6,15 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.Graph;
-using MicrosoftGraph_Security_API_Sample.Helpers;
 using MicrosoftGraph_Security_API_Sample.Models;
 using Resources;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Xml;
+using Newtonsoft.Json;
 
 namespace MicrosoftGraph_Security_API_Sample.Controllers
 {
@@ -113,9 +112,8 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
 
                 Session["ProviderList"] = providers;
             }
-            catch (Exception ex)
+            catch
             {
-
             }
         }
 
@@ -356,7 +354,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                 var alertModel = new AlertModel
                 {
                     Id = alert.Id,
-                    Metadata = JsonConvert.SerializeObject(alert, Formatting.Indented),
+                    Metadata = JsonConvert.SerializeObject(alert, Newtonsoft.Json.Formatting.Indented),
                     Query = queryBuilder.ToString(),
                     Comments = alert.Comments?.ToList(),
                     Status = alert.Status.ToString(),
