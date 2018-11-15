@@ -692,6 +692,12 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
                 string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
                 //// Get top secure score
                 var secureScores = await this.graphService.GetSecureScore(accessToken, "?$top=1");
+
+                if (secureScores == null || secureScores.Count == 0)
+                {
+                    return this.RedirectToAction("Index", "Error", "Cannot get securescore for the tenant. This tenant might not have secure score data or the user might not have proper permissions");
+                }
+
                 var topSecureScore = secureScores.FirstOrDefault();
 
                 //// Get control profiles
