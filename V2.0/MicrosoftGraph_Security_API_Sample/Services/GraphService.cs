@@ -456,8 +456,8 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                         usersAlerts.Add(userPrincipalName, alert.Severity.ToString());
                     }
 
-                    // Calculate users with the most alerts
-                    var ipAddress = alert.HostStates?.FirstOrDefault()?.PrivateIpAddress;
+                    // Calculate destination ip address with the most alerts
+                    var ipAddress = alert.NetworkConnections?.FirstOrDefault()?.DestinationAddress;
                     if (!string.IsNullOrWhiteSpace(ipAddress))
                     {
                         ipAlerts.Add(ipAddress, alert.Severity.ToString());
