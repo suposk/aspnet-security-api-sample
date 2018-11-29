@@ -39,17 +39,18 @@
             <h2>Users at risk</h2>
             @StatisticHelper.CreateStatisticColumn(Html, Model.UsersWithTheMostAlerts, "user:upn", "far fa-user")
         </div>
-        @*<div class="column">
-             <h2>IP addresses at risk</h2>
-             @StatisticHelper.CreateStatisticColumn(Html, Model.IPWithTheMostAlerts, "host:privateipaddress", "far fa-user")
-            </div>*@
         <div class="column">
             <h2>Hosts at risk</h2>
             @StatisticHelper.CreateStatisticColumn(Html, Model.HostsWithTheMostAlerts, "host:fqdn", "fas fa-laptop")
         </div>
-        <div class="column">
+       <div class="column">
+         <h2>Destination IP's at risk</h2>
+         @StatisticHelper.CreateStatisticColumn(Html, Model.IPWithTheMostAlerts, "netconn:destinationaddress", "far fa-user")
+        </div>
+
+        @*<div class="column">
             <h2>Providers with the most alerts</h2>
             @StatisticHelper.CreateStatisticColumn(Html, Model.ProvidersWithTheMostAlerts, "vendor:provider", "far fa-window-restore")
-        </div>
+        </div>*@
     </div>
 </div>

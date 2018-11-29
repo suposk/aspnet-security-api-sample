@@ -46,7 +46,15 @@ namespace MicrosoftGraph_Security_API_Sample.Helpers
 
                 // Create link with filter
                 TagBuilder a = new TagBuilder("a");
-                a.SetInnerText(item.Key.Key);
+                if (filterKey.Equals("netconn:destinationaddress"))
+                {
+                    a.SetInnerText(item.Key.Value);
+                }
+                else
+                {
+                    a.SetInnerText(item.Key.Key);
+                }
+               
                 a.MergeAttribute("href", $"/Home/Filter?key={filterKey}&value={HttpUtility.UrlEncode(item.Key.Value)}");
                 titleDiv.MergeAttribute("title", item.Key.Value);
                 titleDiv.InnerHtml += a.ToString();
