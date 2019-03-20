@@ -57,7 +57,9 @@ namespace MicrosoftGraph_Security_API_Sample.Helpers
 
             try
             {
-                AuthenticationResult result = await cca.AcquireTokenSilentAsync(scopes.Split(new char[] { ' ' }), cca.Users.First());
+                IEnumerable<IAccount> accounts = await cca.GetAccountsAsync();
+                IAccount firstAccount = accounts.FirstOrDefault();
+                AuthenticationResult result = await cca.AcquireTokenSilentAsync(scopes.Split(new char[] { ' ' }), firstAccount);
                 return result.AccessToken;
             }
 
