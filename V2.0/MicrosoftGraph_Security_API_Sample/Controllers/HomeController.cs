@@ -30,7 +30,7 @@ namespace MicrosoftGraph_Security_API_Sample.Controllers
         /// <summary>
         /// The security scopes needed to view and update alerts
         /// </summary>
-        private static List<string> securityScopes = new List<string>() { "SecurityEvents.Read.All", "SecurityEvents.ReadWrite.All" };
+        private static List<string> securityScopes = new List<string>() { "securityevents.read.all", "securityevents.readwrite.all" };
 
         /// <summary>
         /// The graph service object

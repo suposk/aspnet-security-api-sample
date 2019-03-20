@@ -316,8 +316,6 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                 //// If there are no filters and there are no custom odredByParams (if specified only top X)
                 if ((odredByParams == null || odredByParams.Count() < 1) && filters.Count < 1)
                 {
-                    //// Order by 1. Provider 2. CreatedDateTime (desc)
-                    customOrderByParams.Add("vendorInformation/provider", "asc");
                     customOrderByParams.Add("createdDateTime", "desc");
                 }
                 else if (filters.Count >= 1 && filters.ContainsKey("createdDateTime"))
@@ -326,7 +324,16 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                 }
 
                 // Create request with filter and top X
-                var request = this.graphClient.Security.Alerts.Request().Filter(filterQuery).Top(filters.Top);
+                ISecurityAlertsCollectionRequest request = null;
+
+                if (string.IsNullOrEmpty(filterQuery))
+                {
+                     request = this.graphClient.Security.Alerts.Request().Top(filters.Top);
+                }
+                else
+                {
+                     request = this.graphClient.Security.Alerts.Request().Filter(filterQuery).Top(filters.Top);
+                }      
 
                 // Add order py params
                 if (customOrderByParams.Count > 0)
