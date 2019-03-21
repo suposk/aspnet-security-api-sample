@@ -326,7 +326,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                 // Create request with filter and top X
                 ISecurityAlertsCollectionRequest request = null;
 
-                 if (string.IsNullOrEmpty(filterQuery))
+                if (string.IsNullOrEmpty(filterQuery))
                 {
                      request = this.graphClient.Security.Alerts.Request().Top(filters.Top);
                 }
