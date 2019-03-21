@@ -326,7 +326,7 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                 // Create request with filter and top X
                 ISecurityAlertsCollectionRequest request = null;
 
-                if (string.IsNullOrEmpty(filterQuery))
+                 if (string.IsNullOrEmpty(filterQuery))
                 {
                      request = this.graphClient.Security.Alerts.Request().Top(filters.Top);
                 }
@@ -651,8 +651,10 @@ namespace MicrosoftGraph_Security_API_Sample.Models
             var filterRequest = string.Join(
                 $" {AlertFilterOperator.Or} ",
                 upns.Select(upn => $"UserPrincipalName {AlertFilterOperator.Equals} '{upn}'"));
-            Dictionary<string, string> dict = (await this.graphClient.Users.Request().Filter(filterRequest).GetAsync()).ToDictionary(user => user.UserPrincipalName, user => user.DisplayName, StringComparer.InvariantCultureIgnoreCase);         
+            this.graphClient.BaseUrl = this.GraphBetaUrl;
+            Dictionary<string, string> dict = (await this.graphClient.Users.Request().Filter(filterRequest).GetAsync()).ToDictionary(user => user.UserPrincipalName, user => user.DisplayName, StringComparer.InvariantCultureIgnoreCase);
             //// Get additional information about each user from top list
+            this.graphClient.BaseUrl = this.GraphUrl;
             return dict;
         }
     }
