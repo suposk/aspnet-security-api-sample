@@ -55,8 +55,7 @@ This sample requires the following:
 1. On the app's **Overview** page, find the **Application (client) ID** value and record it for later. You'll need this value to configure the Visual Studio configuration file for this project.
 1. In the list of pages for the app, select **Authentication**.
    1. In the **Redirect URIs** section, select **Web** in the combo-box and enter the following redirect URIs:
-       - `https://localhost:44334/signin-oidc`
-       - `https://localhost:44334/Account/GrantPermissions`
+       - `http://localhost:55065/`
 1. In the **Advanced settings** > **Implicit grant** section, check **ID tokens** as this sample requires the [Implicit grant flow](https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-implicit-grant-flow) to be enabled to sign-in the user and call an API.
 1. Select **Save**.
 1. From the **Certificates & secrets** page, in the **Client secrets** section, choose **New client secret**.
