@@ -35,34 +35,43 @@ This sample requires the following:
 
  1. Download or clone the Microsoft Graph Security API Sample for ASP.NET 4.6 (REST).
 
-### Register the application
+### Create your app
 
-1. Sign into the [Application Registration Portal](https://apps.dev.microsoft.com/) using either your work or school account.
+#### Choose the tenant where you want to create your app
 
-2. Choose **Add an app**.
+1. Sign in to the [Azure portal](https://portal.azure.com) using either a work or school account.
+1. If your account is present in more than one Azure AD tenant:
+   1. Select your profile from the menu on the top right corner of the page, and then **Switch directory**.
+   1. Change your session to the Azure AD tenant where you want to create your application.
 
-3. Enter a name for the application, and choose **Create application**.
+#### Register the app
 
- > The registration page displays the properties of your app.
+1. Navigate to the [Azure portal > App registrations](https://go.microsoft.com/fwlink/?linkid=2083908) to register your app.
+1. Select **New registration**.
+1. When the **Register an application page** appears, enter your app's registration information:
+   1. In the **Name** section, enter a meaningful name that will be displayed to users of the app. For example: `MyWebApp`
+   1. In the **Supported account types** section, select **Accounts in any organizational directory and personal Microsoft accounts (e.g. Skype, Xbox, Outlook.com)**.
+1. Select **Register** to create the app.
+1. On the app's **Overview** page, find the **Application (client) ID** value and record it for later. You'll need this value to configure the Visual Studio configuration file for this project.
+1. In the list of pages for the app, select **Authentication**.
+   1. In the **Redirect URIs** section, select **Web** in the combo-box and enter the following redirect URIs:
+       - `https://localhost:44334/signin-oidc`
+       - `https://localhost:44334/Account/GrantPermissions`
+1. In the **Advanced settings** > **Implicit grant** section, check **ID tokens** as this sample requires the [Implicit grant flow](https://docs.microsoft.com/azure/active-directory/develop/v2-oauth2-implicit-grant-flow) to be enabled to sign-in the user and call an API.
+1. Select **Save**.
+1. From the **Certificates & secrets** page, in the **Client secrets** section, choose **New client secret**.
+   1. Enter a key description (of instance `app secret`).
+   1. Select a key duration of either **In 1 year**, **In 2 years**, or **Never Expires**.
+   1. When you click the **Add** button, the key value will be displayed. Copy the key value and save it in a safe location.
 
-4. Copy and save the Application Id, it will be used later. This is the unique identifier for your application.
+      You'll need this key later to configure the project in Visual Studio. This key value will not be displayed again, nor retrievable by any other means, so record it as soon as it is visible from the Azure portal.
 
-5. Under **Application Secrets**, choose **Generate New Password**. Copy and save the password from the **New password generated** dialog. 
-**Note:** you will not be able to view the secret again in this interface.
-
-   You will need the application ID and password (secret) to configure the MicrosoftGraph_Security_API_Sample app in the next section.
-
-6. Under **Platforms**, choose **Add Platform**.
-
-7. Choose **Web**.
-
-8. Make sure the **Allow Implicit Flow** check box is selected, and enter *http://localhost:55065/* (or another port of your choice) as the Redirect URI.
-
-   The **Allow Implicit Flow** option enables the hybrid flow. During authentication, this enables the app to receive both sign-in information (the id_token) and artifacts (in this case, an authorization code) that the app can use to obtain an access token.
-
-9. Under **Microsoft Graph Permissions**, choose **Delegated Permissions,  Add **SecurityEvents.Read.All, SecurityEvents.ReadWrite.All, and User.Read.All**. These permissions will allow the sample application to read and modify security events (alerts) and to retrieve information about users from Azure Active Directory via the Microsoft Graph API.
-
-10. Choose **Save**.
+1. In the list of pages for the app, select **API permissions**.
+   1. Click the **Add a permission** button and then make sure that the **Microsoft APIs** tab is selected.
+   1. In the **Commonly used Microsoft APIs** section, select **Microsoft Graph**.
+   1. In the **Delegated permissions** section, make sure that the following permissions are checked: **SecurityEvents.Read.All**, **SecurityEvents.ReadWrite.All**, **User.Read.All** permission is checked. Use the search box if necessary.
+    > These permissions will allow the sample application to read and modify security events (alerts) and to retrieve information about users from Azure Active Directory via the Microsoft Graph API.
+   1. Select the **Add permissions** button.
 
 ## Grant Admin consent to view Security data
 
