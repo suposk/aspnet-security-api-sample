@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     styleUrls: ['./header-menu.component.css']
 })
 export class HeaderMenuComponent {
-    public items = ["About"];
+    public items = [];
 
     public openMenu(): void { }
 }
