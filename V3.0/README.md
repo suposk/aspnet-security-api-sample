@@ -172,16 +172,59 @@ See [Hosting without a tunnel](https://github.com/microsoftgraph/nodejs-webhooks
    
    >If you update any dependencies for this sample, make sure you **do not update** System.IdentityModel.Tokens.Jwt to v5, which is designed for use with .NET Core.
 
-## Deployment to Azure
+## Deploy the sample to Azure
+If you have an Azure subscription, you can publish the sample app to an Azure website. 
+The following instructions assume that you've already [registered the sample app](#register-the-application) in the Application Registration Portal.
 
-1. Download publish profile for application from Azure portal.
-2. Setup appsettings for Production environment.
-3. In the Azure portal in application settings setup new environment variable with name `ASPNETCORE_ENVIRONMENT` and `Production` value (by default). This is necessary so that the application reads correct appsettings file at startup.
-4. Publish project in Visual Studio.
+### Create a web app (website) in the Azure portal
 
-#### Create subscriptions and get notifications in Azure
+1. Sign into the [Azure Portal](https://portal.azure.com) with your Azure credentials.
 
-In order to use Notification in application deployed to Azure, you need to enable **Web sockets** option in application settings of this WebApp in the Azure Portal.
+2. Choose **New > Web + Mobile > Web App**.
+
+3. Give the website a unique name. Choose a resource group, and click **Create**.
+
+4. Select the new web app in your list of resources.
+
+5. In the Azure portal, under application settings setup new environment variable with name `ASPNETCORE_ENVIRONMENT` and `Production` value (by default). This is necessary so that the application reads correct appsettings file at startup.
+
+6. In order to use Notification in application deployed to Azure, you need to enable **Web sockets** option in application settings of this WebApp in the Azure Portal.
+
+6. Choose **Overview** in the left-hand pane, and then choose **Get publish profile** (or **More > Get publish profile**) from the menu above the web app's Essentials pane.
+
+7. Save the profile locally.
+
+### Publish the MicrosoftGraph_Security_API_Sample app from Visual Studio
+
+1. In Visual Studio, open the MicrosoftGraph_Security_API_Sample application. 
+Right-click the **MicrosoftGraph_Security_API_Sample** project node and choose **Publish**.
+
+2. In the Publish dialog, choose **Import**, and choose the publish profile file you downloaded. 
+
+3. On the Connection tab of the Publish dialog, change the *http* protocol to *https* in the Destination URL of your new web app.
+
+4. Copy the Destination URL and click **Publish**. Close the browser window that is opened.
+
+5. In the `appsettings.Production.json` file, replace the **RedirectUri** value to the Destination URL that you copied and the **NotificationUrl** value to the Destination URL, keeping the /notification/listen part. 
+
+      Ex: <add key="ida:RedirectUri" value="https://sampletest.azurewebsites.net/" 
+
+      <add key="ida:NotificationUrl" value="https://sampletest.azurewebsites.net/notification/listen"
+
+6. Choose **View > Other Windows > Web Publish Activity**. 
+
+7. In the Web Publish Activity window, click the **Publish Web** button (it looks like a globe) on the toolbar. This is how you update the published project after you make changes.
+
+### Update the redirect URI in the Application Registration Portal
+
+1. In the [Application Registration Portal](https://apps.dev.microsoft.com), open the application that you registered for the sample (as described in [Register the application](#register-the-application)). 
+
+2. In the Web platform section, replace the *http://localhost:55065/* Redirect URI with the Destination URL of your new MicrosoftGraph_Security_API_Sample web application. 
+(Alternatively, you can click **Add Url** and add the Destination URL.)
+
+3. Click **Save**.
+
+The new Azure web application should now be ready to use.
 
 ## Caching and mock data
 
