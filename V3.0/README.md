@@ -128,7 +128,7 @@ Repeat this action for each user in the organization that is authorized to use a
 
 ### Visual studio settings
 1. Go to the project properties in visual studio, click on Debug 
-    1. Check the checkbox for 'Launch browesr at 'swagger'
+    1. Check the checkbox for 'Launch browser at 'swagger'
     2. Add the Environmental variables 
          "CLIENT_ENVIRONMENT" with Value "None", "ASPCORE_ENVIRONMENT" with value "Development"
     3. Set the App URL: **http://localhost:5000** to run the server at port 5000.
@@ -136,7 +136,7 @@ Repeat this action for each user in the organization that is authorized to use a
   	  >![Visual Stodio settings](readme-images/VSSettings.JPG)  
 
 
-### Development and launch app locally
+### Compile and launch app locally
 
 In order to run the application in a local environment, you need to perform the following steps:
 1. After following the prerequisites of Installing .Net Core SDK v2.2, NodeJS and Angular CLI, Open the solution file ` MicrosoftGraph_Security_API_Sample_V3.0.sln` and restore Nuget packages for .Net core app by building the solution file in Visual studio (Build solution).
@@ -235,9 +235,9 @@ The new Azure web application should now be ready to use.
 
 ## Caching and mock data
 
-Because for the application to work, we have to do many simultaneous requests to the Graph API, and the response time of the Graph API is often very large. Moreover, not all requests can be parallelized, since for some queries, we need to wait for the results of previous queries. So we use cache. And there are two sections in the `appsettings` file that allow you to customize this behavior:
-1. `UseMockFilters`. Only set this to true when your tenant doesn't have any alerts and you want to see how the demo UI looks like., This gets data for alerts' and actions' filters from `mockData.json`. This file contains a list of possible providers, categories and other values needed to build filters on the client. If `UseMockFilters` parameter is false, then when the application is started (once), we load the list of categories, providers and other data from the Graph API, and then use them. This method allows you to get more relevant data regarding your tenant from Graph API but significantly increases the time of the first launch of the application.
-2. `CacheTime`. In this section of settings you can specify the desired time to cache data on our server in seconds. To disable caching for any action, specify 0. MemoryCache used for caching data from Graph API. You can significantly speed up subsequent queries for the same data using caching.
+Since the demo application makes many simultaneous calls to the Graph API, the total response time can be long. We use a cache since not all queries can be parallelized as they may depend on results from previous queries. There are two sections in the `appsettings` file that allow you to customize this behavior:
+1. `CacheTime`. In this section of settings you can specify the desired time to cache data on our server in seconds. To disable caching for any action, specify 0. MemoryCache used for caching data from Graph API. You can significantly speed up subsequent queries for the same data using caching.
+2. `UseMockFilters`. Only set this to true when your tenant doesn't have any alerts and you want to see how the demo UI looks like., This gets data for alerts' and actions' filters from `mockData.json`. This file contains a list of possible providers, categories and other values needed to build filters on the client. If `UseMockFilters` parameter is false, then when the application is started (once), we load the list of categories, providers and other data from the Graph API, and then use them. This method allows you to get more relevant data regarding your tenant from Graph API but significantly increases the time of the first launch of the application.
 
 ## Where are list items' order defined in code?
 
