@@ -43,9 +43,9 @@ The advanced UI allows clicking on virtually any property to generate a filtered
 
 ## Sample project V3.0
 
-Sample project V3.0 creates a more Advanced version of the V2.0 UI, which can be directly used as a tool for investigation purposes by analysts, It demonstrates using Microsoft Graph Security API to:
+Sample project V3.0 creates a more Advanced version of the V2.0 UI, which uses an angular server and can be directly used as a tool for investigation purposes by analysts, It demonstrates using Microsoft Graph Security API to:
 
-	• Create security actions and retrieve them 
+	• Create security actions (Eg: Block IP) and retrieve them 
 	• Provides capability to do advanced filtering on the UI for alerts, secure score, security actions and subscriptions
 	    > In addition to functionality of V2.0 (listed below)
 	• Build and submit queries to retrieve alerts
