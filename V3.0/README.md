@@ -7,11 +7,9 @@
 - [Register the application](#register-the-application)
 - [Grant Admin consent to view Security data](#grant-admin-consent-to-view-security-data)
 - [Build and run the sample](#build-and-run-the-sample)
-- [Microsoft Graph Security API Sample App v2.0 UI Walkthrough](#microsoft-graph-security-api-sample-app-v2.0-ui-walkthrough)
 - [Deploy the sample to Azure](#deploy-the-sample-to-azure)
-- [Code of note](#code-of-note)
+- [Microsoft Graph Security API Sample App v3.0 UI Walkthrough](#Demo-UI-walkthrough)
 - [Questions and comments](#questions-and-comments)
-- [Contributing](#contributing)
 - [Additional resources](#additional-resources)
 
 ## Introduction
@@ -107,10 +105,13 @@ Repeat this action for each user in the organization that is authorized to use a
 
 > **Note:** For more details about the authorization flow, read [Authorization and the Microsoft Graph Security API](https://developer.microsoft.com/en-us/graph/docs/concepts/security-authorization).
 
-## Configure and run the sample for **MicrosoftGraph_Security_API_Sample** project (Part 1)
+
+## Build and run the sample
+
+### Configure and run the sample for **MicrosoftGraph_Security_API_Sample** project (Part 1)
 
 #### Server application
-1. Open the MicrosoftGraph_Security_API_Sample project. 
+1. Open the ` MicrosoftGraph_Security_API_Sample_V3.0.sln` project. 
     Configurations for server side application are in the `appsettings.<ASPNETCORE_ENVIRONMENT>.json` (e.g. appsettings.Development.json or appsettings.Production.json) files in the project root directory. When you start the application, the settings are automatically read from the file whose name matches the current environment name. The default in the Visual Studio is Development environment. You can add any other environments and settings for them at your discretion. 
     App settings consist of 3 main properties:
     1.	**AzureAd** is a complex-type property for setup auth using Azure Active Directory.
@@ -120,24 +121,30 @@ Repeat this action for each user in the organization that is authorized to use a
 	
 #### Client application
 
-3. The client application is located in the `ClientApp` folder. And the settings for it are in the `ClientApp/environments` folder. As well as on the server, there can be many different environments and settings for each of them. By default, there are settings for two environments:
+3. The client application is located in the `ClientApp` folder. And the settings for it are in the `ClientApp/src/environments` folder. As well as on the server, there can be many different environments and settings for each of them. By default, there are settings for two environments:
     1. `environment.ts` is settings for development environment.
     2. `environment.prod.ts` is the settings that are used when building the production version of the Angular application by default.
-4. If you want to run locally, In environment.ts file, Replace **Enter_Your_Appid** with the application ID that you copied during app registration. 
+4. If you want to run locally, In environment.ts file, Replace **Enter_Your_Appid** with the application ID that you copied during app registration in the fields 'clientId' and 'protectedResourceMap'. 
+
+### Visual studio settings
+1. Go to the project properties in visual studio, click on Debug 
+    1. Check the checkbox for 'Launch browesr at 'swagger'
+    2. Add the Environmental variables 
+         "CLIENT_ENVIRONMENT" with Value "None", "ASPCORE_ENVIRONMENT" with value "Development"
+    3. Set the App URL: **http://localhost:5000** to run the server at port 5000.
+
+  	  >![Visual Stodio settings](readme-images/VSSettings.JPG)  
 
 
-## Development and launch app locally
+### Development and launch app locally
 
 In order to run the application in a local environment, you need to perform the following steps:
-1. Install [.Net Core SDK v2.2](https://dotnet.microsoft.com/download/thank-you/dotnet-sdk-2.2.104-windows-x64-installer)
-2. Install LTS version of [NodeJS](https://nodejs.org/uk/)
-3. Install Globally [angular cli](https://cli.angular.io/) using command `npm install -g @angular/cli`.
-4. Restore Nuget packages for .Net core app.
-5. Install client dependencies using `npm install` command in the client app root directory (ClientApp).
-6. Run server app.
-7. Run client app using `npm start` command in the client app root directory (ClientApp).
+1. After following the prerequisites of Installing .Net Core SDK v2.2, NodeJS and Angular CLI, Open the solution file ` MicrosoftGraph_Security_API_Sample_V3.0.sln` and restore Nuget packages for .Net core app by building the solution file in Visual studio (Build solution).
+2. Navigate to Client app root directory and  install client dependencies using `npm install`.
+3. Run the solution file in Visual Studio (F5) to run the server app.
+4. In the client app root directory (ClientApp), Run client app using `npm start` command.
 
-## Configure the sample Notification Listener (Part 2) in the local environment.
+### Configure the sample Notification Listener (Part 2) in the local environment.
 
 ### **Set up the ngrok proxy**
 
@@ -228,8 +235,8 @@ The new Azure web application should now be ready to use.
 
 ## Caching and mock data
 
-Because for the application to work, we have to do many simultaneous requests to the Graph API, and the response time of the Graph API is often very large. Moreover, not all requests can be parallelized, since for some queries, we need to wait for the results of previous queries. So we use cache. And there are two sections in the appsettings file that allow you to customize this behavior:
-1. `UseMockFilters`. If is true, we use date for alerts' and actions' filters from `mockData.json`. This file contains a list of possible providers, categories and other values needed to build filters on the client. This method works much faster. Therefore, for better performance, this method will be preferable. If `UseMockFilters` parameter is false, then when the application is started (once), we load the list of categories, providers and other data from the Graph API, and then use them. This method allows you to get more relevant data from Graph API but significantly increases the time of the first launch of the application.
+Because for the application to work, we have to do many simultaneous requests to the Graph API, and the response time of the Graph API is often very large. Moreover, not all requests can be parallelized, since for some queries, we need to wait for the results of previous queries. So we use cache. And there are two sections in the `appsettings` file that allow you to customize this behavior:
+1. `UseMockFilters`. Only set this to true when your tenant doesn't have any alerts and you want to see how the demo UI looks like., This gets data for alerts' and actions' filters from `mockData.json`. This file contains a list of possible providers, categories and other values needed to build filters on the client. If `UseMockFilters` parameter is false, then when the application is started (once), we load the list of categories, providers and other data from the Graph API, and then use them. This method allows you to get more relevant data regarding your tenant from Graph API but significantly increases the time of the first launch of the application.
 2. `CacheTime`. In this section of settings you can specify the desired time to cache data on our server in seconds. To disable caching for any action, specify 0. MemoryCache used for caching data from Graph API. You can significantly speed up subsequent queries for the same data using caching.
 
 ## Where are list items' order defined in code?
@@ -242,3 +249,49 @@ You can change order of displaying lists with properties on the alert details pa
     <!--#endregion scrollable-detail-list -->
 ```
 You can change the order at any time at your discretion.
+
+## Demo UI walkthrough
+
+1. The start page looks similar to this:
+>![Dashboard](readme-images/1.dashboardcollapsed.png)
+
+2. You can click the icon to expand the dashboard
+>![Dashboard expanded](readme-images/2.dashboardexpanded.png)
+
+3. Click on any of the clickable links to see the filtered alerts
+>![Alerts list](readme-images/3.alertslist.png)
+
+4. Dive deep into a specific alert
+>![Alert details](readme-images/4.alertdetails.png)
+
+5. Manage the alert
+>![Manage alert](readme-images/5.managealert.png)
+
+6. Invoke a security action
+>![Invoke action](readme-images/6.invokeaction.png)
+
+7. List of security actions
+>![Actions list](readme-images/7.actionslist.png)
+
+8. List of subscriptions 
+>![Subscriptions list](readme-images/8.subscriptionslist.png)
+
+9. Details regarding secure score of the tenant
+>![Secure score](readme-images/9.securescore.png)
+
+## Questions and comments
+
+We'd love to get your feedback about this sample! 
+Please send us your questions and suggestions in the [Issues](https://github.com/microsoftgraph/aspnet-connect-rest-sample/issues) section of this repository.
+
+Your feedback is important to us. Connect with us on [Stack Overflow](https://stackoverflow.com/questions/tagged/microsoftgraph). 
+Tag your questions with [MicrosoftGraph].
+
+## Additional resources
+
+- [Microsoft Graph Security API Documentaion](https://aka.ms/graphsecuritydocs)
+- [Other Microsoft Graph Connect samples](https://github.com/MicrosoftGraph?utf8=%E2%9C%93&query=-Connect)
+- [Microsoft Graph overview](https://graph.microsoft.io)
+
+## Copyright
+Copyright &copy; 2018 Microsoft. All rights reserved.
