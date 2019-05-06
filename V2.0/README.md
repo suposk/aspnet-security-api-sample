@@ -67,10 +67,10 @@ This sample requires the following:
 
 1. In the list of pages for the app, select **API permissions**.
    1. Click the **Add a permission** button and then make sure that the **Microsoft APIs** tab is selected.
-   1. In the **Commonly used Microsoft APIs** section, select **Microsoft Graph**.
-   1. In the **Delegated permissions** section, make sure that the following permissions are checked: **SecurityEvents.Read.All**, **SecurityEvents.ReadWrite.All**, **User.Read.All** permission is checked. Use the search box if necessary.
+   2. In the **Commonly used Microsoft APIs** section, select **Microsoft Graph**.
+   3. In the **Delegated permissions** section, make sure that the following permissions are checked: **SecurityEvents.Read.All**, **SecurityEvents.ReadWrite.All**, and **User.Read.All**. Use the search box if necessary.
     > These permissions will allow the sample application to read and modify security events (alerts) and to retrieve information about users from Azure Active Directory via the Microsoft Graph API.
-   1. Select the **Add permissions** button.
+   4. Select the **Add permissions** button.
 
 ## Grant Admin consent to view Security data
 
