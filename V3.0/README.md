@@ -166,7 +166,7 @@ You can use the ngrok web interface (http://127.0.0.1:4040) to inspect the HTTP 
 
 2. Unzip the package and run ngrok.exe.
 
-3. Use the command `ngrok htpp server-port-number`. Replace the *{server-port-number}* placeholder value in the above command with your server port number. By default server app uses port 5000, so command to run ngrok looks like `ngrok http 5000`.
+3. Use the command `ngrok http server-port-number`. Replace the *{server-port-number}* placeholder value in the above command with your server port number. By default server app uses port 5000, so command to run ngrok looks like `ngrok http 5000`.
 
 5. Copy the HTTPS URL displayed in the console. You'll use this to configure your notification URL in the sample.
 
