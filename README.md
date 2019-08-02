@@ -1,3 +1,18 @@
+---
+page_type: sample
+products:
+- ms-graph
+languages:
+- aspx
+- javascript
+extensions:
+  contentType: samples
+  technologies:
+  - Microsoft Graph
+  services:
+  - Security
+  createdDate: 4/6/2018 9:53:00 AM
+---
 # Microsoft Graph Security API Sample for ASP.NET 4.6 (REST)
 
 ## Table of contents
