@@ -8,7 +8,7 @@ languages:
 extensions:
   contentType: samples
   technologies:
-  - Microsoft Graph
+  - Microsoft Graph 
   services:
   - Security
   createdDate: 4/6/2018 9:53:00 AM
