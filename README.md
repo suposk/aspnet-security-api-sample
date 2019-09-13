@@ -5,6 +5,7 @@ products:
 languages:
 - aspx
 - javascript
+description: "This sample shows how to connect your ASP .Net web app to the Security API using Microsoft Graph SDK."
 extensions:
   contentType: samples
   technologies:
