@@ -94,21 +94,15 @@ https://login.microsoftonline.com/TENANT_ID/adminconsent?client_id=APPLICATION_I
 To access security data through the Microsoft Graph security API, the client application must be granted the required permissions and when operating in Delegated Mode, the user signed in to the application must also be authorized to call the Microsoft Graph security API.
 This section describes how the Tenant Administrator can authorize specific users in the organization.
 
-1. As a Tenant **Administrator**, sign in to the [Azure Portal](https://portal.azure.com).
+1. As a Tenant **Administrator**, sign in to the [Azure portal](https://portal.azure.com).
 
-2. Navigate to the Azure Active Directory blade.
+2. Click the icon in the top left to expand the Azure portal menu. Select **Azure Active Directory** > **Users**.
 
-3. Select **Users**.
+3. Click the name of the user.
 
-4. Select a user account that you want to authorize to access to the Microsoft Graph security API.
+4. Choose **Assigned roles**, and then **Add assignment**.
 
-5. Select **Directory Role**.
-
-6. Select the **Limited Administrator** radio button and select the check box next to **Security administrator** role
-
-     >  ![Role consent dialog](readme-images/SecurityRole.png)
-
-7. Click the **Save** button at the top of the page
+5. Select **Security reader**, and click **Add**.
 
 Repeat this action for each user in the organization that is authorized to use applications that call the Microsoft Graph security API. Currently, this permission cannot be granted to security groups.
 
