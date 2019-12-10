@@ -104,7 +104,7 @@ This section describes how the Tenant Administrator can authorize specific users
 
 5. Select **Security reader**, and click **Add**.
 
-Repeat this action for each user in the organization that is authorized to use applications that call the Microsoft Graph security API. Currently, this permission cannot be granted to security groups.
+Repeat this action for each user in the organization that is not a member of the *Security Administrator* role and authorized to use applications that call the Microsoft Graph security API. Currently, this permission cannot be granted to security groups.
 
 > **Note:** For more details about the authorization flow, read [Authorization and the Microsoft Graph Security API](https://developer.microsoft.com/en-us/graph/docs/concepts/security-authorization).
 
