@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
+//using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
@@ -14,6 +13,8 @@ using AppModelv2_WebApp_OpenIDConnect_DotNet.TokenStorage;
 using System.IdentityModel.Claims;
 using System.Collections.Generic;
 using System.Configuration;
+using Microsoft.IdentityModel.Protocols;
+using System.IdentityModel.Tokens;
 
 [assembly: OwinStartup(typeof(AppModelv2_WebApp_OpenIDConnect_DotNet.Startup))]
 
@@ -44,12 +45,14 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
+
             app.UseOpenIdConnectAuthentication(
             new OpenIdConnectAuthenticationOptions
             {
                 // Sets the ClientId, authority, RedirectUri as obtained from web.config
                 ClientId = clientId,
-                Authority = authority,
+                //Authority = authority,
+                Authority = "https://login.microsoftonline.com/common/v2.0",
                 RedirectUri = redirectUri,
                 // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it is using the home page
                 PostLogoutRedirectUri = redirectUri,
@@ -60,7 +63,7 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
 
 
                 // ResponseType is set to request the id_token - which contains basic information about the signed-in user
-                ResponseType = OpenIdConnectResponseType.IdToken,
+                //ResponseType = OpenIdConnectResponseType.IdToken,
                 // ValidateIssuer set to false to allow personal and work accounts from any organization to sign in to your application
                 // To only allow users from a single organizations, set ValidateIssuer to true and 'tenant' setting in web.config to the tenant name
                 // To allow users from only a list of specific organizations, set ValidateIssuer to true and use ValidIssuers parameter 
@@ -83,18 +86,15 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                         TokenCache userTokenCache = new SessionTokenCache(signedInUserID,
                             context.OwinContext.Environment["System.Web.HttpContextBase"] as HttpContextBase).GetMsalCacheInstance();
 
-                        //ConfidentialClientApplication cca = new ConfidentialClientApplication(
-                        //    clientId,
-                        //    redirectUri,
-                        //    new ClientCredential(appSecret)
-                        //    userTokenCache,
-                        //    null);
+                        ConfidentialClientApplication cca = new ConfidentialClientApplication(
+                            clientId,
+                            redirectUri,
+                            new ClientCredential(appSecret),
+                            userTokenCache,
+                            null);
 
-                        //ConfidentialClientApplication cca = new ConfidentialClientApplication(
-                        //    clientId, redirectUri, new ClientCredential(appSecret), userTokenCache, null);
-                                                
-                        var cred = new ClientCredential(appSecret);
-                        ConfidentialClientApplication cca = new ConfidentialClientApplication(clientId, redirectUri, cred, userTokenCache, null);
+                        //var cred = new ClientCredential(appSecret);
+                        //ConfidentialClientApplication cca = new ConfidentialClientApplication(clientId, redirectUri, cred, userTokenCache, null);
 
                         string[] scopes = graphScopes.Split(new char[] { ' ' });
 
@@ -120,5 +120,6 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
             context.Response.Redirect("/?errormessage=" + context.Exception.Message);
             return Task.FromResult(0);
         }
+
     }
 }
