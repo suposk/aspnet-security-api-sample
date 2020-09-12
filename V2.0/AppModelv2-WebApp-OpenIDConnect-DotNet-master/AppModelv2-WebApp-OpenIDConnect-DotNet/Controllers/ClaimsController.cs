@@ -1,4 +1,9 @@
-﻿using AppModelv2_WebApp_OpenIDConnect_DotNet.Providers;
+﻿using AppModelv2_WebApp_OpenIDConnect_DotNet.Models;
+using AppModelv2_WebApp_OpenIDConnect_DotNet.Providers;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -30,14 +35,51 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Token()
+        public async Task Token()
         {
             var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
 
             string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
             ViewBag.accessToken = accessToken;
+            
+            var secureScores = await this.GetSecureScore(accessToken, "?$top=100");
 
-            return View();
+            //return View();
+        }
+
+
+        public async Task<List<SecureScore>> GetSecureScore(string accessToken, string queryParameter)
+        {
+            try
+            {
+                string endpoint = "https://graph.microsoft.com/beta/security/securescores";
+                using (var client = new HttpClient())
+                {
+                    using (var request = new HttpRequestMessage(HttpMethod.Get, endpoint + queryParameter))
+                    {
+                        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                        using (var response = await client.SendAsync(request))
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string result = await response.Content.ReadAsStringAsync();
+                                SecureScoreResult secureScoreResult = JsonConvert.DeserializeObject<SecureScoreResult>(result);
+                                return secureScoreResult.Value;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
