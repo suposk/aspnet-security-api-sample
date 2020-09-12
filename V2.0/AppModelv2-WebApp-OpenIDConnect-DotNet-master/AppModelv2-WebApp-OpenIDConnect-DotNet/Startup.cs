@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using System.IdentityModel.Tokens;
+using AppModelv2_WebApp_OpenIDConnect_DotNet.Providers;
 
 [assembly: OwinStartup(typeof(AppModelv2_WebApp_OpenIDConnect_DotNet.Startup))]
 
@@ -99,8 +100,8 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                         string[] scopes = graphScopes.Split(new char[] { ' ' });
 
                         AuthenticationResult result = await cca.AcquireTokenByAuthorizationCodeAsync(code, scopes);
-                        UserScopes = result.Scopes;
-                        var accesstoke = result.AccessToken;
+                        UserScopes = result.Scopes;                        
+                        SampleAuthProvider.Instance.AccessToken = result.AccessToken;
                     },
 
                     AuthenticationFailed = OnAuthenticationFailed

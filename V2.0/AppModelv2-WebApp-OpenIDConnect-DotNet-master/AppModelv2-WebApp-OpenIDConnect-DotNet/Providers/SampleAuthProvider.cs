@@ -31,6 +31,7 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Providers
         }
 
         private SessionTokenCache TokenCache { get; set; }
+        public string AccessToken { get; set; }
 
         public static SampleAuthProvider Instance
         {

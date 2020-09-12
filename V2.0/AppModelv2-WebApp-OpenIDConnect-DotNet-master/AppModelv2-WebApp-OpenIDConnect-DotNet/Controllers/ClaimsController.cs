@@ -1,11 +1,15 @@
 ﻿using AppModelv2_WebApp_OpenIDConnect_DotNet.Models;
 using AppModelv2_WebApp_OpenIDConnect_DotNet.Providers;
+using Microsoft.Graph;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using SecureScore = AppModelv2_WebApp_OpenIDConnect_DotNet.Models.SecureScore;
 
 namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
 {
@@ -40,11 +44,37 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
             var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
 
             string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
+            //string accessToken = SampleAuthProvider.Instance.AccessToken;
             ViewBag.accessToken = accessToken;
-            
-            var secureScores = await this.GetSecureScore(accessToken, "?$top=100");
 
-            //return View();
+            var secureScores = await this.GetSecureScore(accessToken, "?$top=1");
+            //var secureScores = await this.GetSecureScore(accessToken, "");
+
+            var authenticationProvider = new DelegateAuthenticationProvider(
+            (requestMessage) =>
+            {
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                return Task.FromResult(0);
+            });
+            var graphClient = new GraphServiceClient(authenticationProvider);
+
+            try
+            {
+
+                var alerts = await graphClient.Security.Alerts
+                    .Request()
+                    .GetAsync();
+
+                var scores = await graphClient.Security.SecureScores
+                    .Request()
+                    .Top(1)
+                    .GetAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error: {ex.Message} {ex?.InnerException}");
+            }
+
         }
 
 
@@ -52,7 +82,10 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
         {
             try
             {
-                string endpoint = "https://graph.microsoft.com/beta/security/securescores";
+                //string endpoint = "https://graph.microsoft.com/beta/security/securescores";
+                //string endpoint = "https://graph.microsoft.com/v1.0/Security/secureScores";                      
+                string endpoint = "https://graph.microsoft.com/v1.0/security/alerts"; queryParameter = string.Empty;
+
                 using (var client = new HttpClient())
                 {
                     using (var request = new HttpRequestMessage(HttpMethod.Get, endpoint + queryParameter))
@@ -70,6 +103,7 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
                             }
                             else
                             {
+                                Debug.WriteLine($"Error: {response}");
                                 return null;
                             }
                         }
