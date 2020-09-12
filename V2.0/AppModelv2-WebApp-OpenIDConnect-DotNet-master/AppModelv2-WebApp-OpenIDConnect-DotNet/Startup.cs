@@ -56,6 +56,8 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
 
                 //Scope = OpenIdConnectScope.OpenIdProfile,
                 Scope = "openid email profile offline_access " + graphScopes,
+                //Scope = AppConstants.SCOPE,
+
 
                 // ResponseType is set to request the id_token - which contains basic information about the signed-in user
                 ResponseType = OpenIdConnectResponseType.IdToken,

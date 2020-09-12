@@ -59,7 +59,11 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Providers
             {
                 //string[] scopes = graphScopes.Split(new char[] { ' ' });
                 //var scopes = new List<string> { "user.read" };
-                var scopes = new List<string> { "https://graph.microsoft.com/.default" };                
+                var scopes = new List<string> { AppConstants.SCOPE };   
+
+                //string[] ascopes = graphScopes.Split(new char[] { ' ' });
+                //var scopes = new List<string> { AppConstants.SCOPE };
+                //scopes.AddRange(ascopes);
 
                 IEnumerable<IAccount> accounts = await cca.GetAccountsAsync();
                 IAccount firstAccount = accounts.FirstOrDefault();
