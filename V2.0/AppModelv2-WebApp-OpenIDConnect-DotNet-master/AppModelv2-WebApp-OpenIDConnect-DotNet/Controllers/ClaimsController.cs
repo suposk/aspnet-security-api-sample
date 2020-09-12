@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using AppModelv2_WebApp_OpenIDConnect_DotNet.Providers;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
 {
@@ -24,6 +26,16 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
 
             // TenantId is the unique Tenant Id - which represents an organization in Azure AD
             ViewBag.TenantId = userClaims?.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid")?.Value;
+
+            return View();
+        }
+
+        public async Task<ActionResult> Token()
+        {
+            var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
+
+            string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
+            ViewBag.accessToken = accessToken;
 
             return View();
         }

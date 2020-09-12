@@ -13,6 +13,7 @@ using System.Web;
 using AppModelv2_WebApp_OpenIDConnect_DotNet.TokenStorage;
 using System.IdentityModel.Claims;
 using System.Collections.Generic;
+using System.Configuration;
 
 [assembly: OwinStartup(typeof(AppModelv2_WebApp_OpenIDConnect_DotNet.Startup))]
 
@@ -21,14 +22,13 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
     public class Startup
     {
         // The Client ID is used by the application to uniquely identify itself to Azure AD.
-        string clientId = System.Configuration.ConfigurationManager.AppSettings["ClientId"];
-
+        string clientId = ConfigurationManager.AppSettings["ClientId"];
         // RedirectUri is the URL where the user will be redirected to after they sign in.
-        string redirectUri = System.Configuration.ConfigurationManager.AppSettings["RedirectUri"];
-
+        string redirectUri = ConfigurationManager.AppSettings["RedirectUri"];
         // Tenant is the tenant ID (e.g. contoso.onmicrosoft.com, or 'common' for multi-tenant)
-        static string tenant = System.Configuration.ConfigurationManager.AppSettings["Tenant"];
-        private static string graphScopes = System.Configuration.ConfigurationManager.AppSettings["GraphScopes"].ToLower();
+        static string tenant = ConfigurationManager.AppSettings["Tenant"];
+        string graphScopes = System.Configuration.ConfigurationManager.AppSettings["GraphScopes"].ToLower();
+        string appSecret = ConfigurationManager.AppSettings["ida:AppSecret"];
 
         // Authority is the URL for authority, composed by Microsoft identity platform endpoint and the tenant name (e.g. https://login.microsoftonline.com/contoso.onmicrosoft.com/v2.0)
         static string authority = String.Format(System.Globalization.CultureInfo.InvariantCulture, System.Configuration.ConfigurationManager.AppSettings["Authority"], tenant);
@@ -53,7 +53,10 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                 RedirectUri = redirectUri,
                 // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it is using the home page
                 PostLogoutRedirectUri = redirectUri,
-                Scope = OpenIdConnectScope.OpenIdProfile,
+
+                //Scope = OpenIdConnectScope.OpenIdProfile,
+                Scope = "openid email profile offline_access " + graphScopes,
+
                 // ResponseType is set to request the id_token - which contains basic information about the signed-in user
                 ResponseType = OpenIdConnectResponseType.IdToken,
                 // ValidateIssuer set to false to allow personal and work accounts from any organization to sign in to your application
@@ -66,10 +69,10 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                 // OpenIdConnectAuthenticationNotifications configures OWIN to send notification of failed authentications to OnAuthenticationFailed method
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
-                    SecurityTokenReceived = async (call) => 
-                    {
-                        var ab = call;
-                    },
+                    //SecurityTokenReceived = async (call) => 
+                    //{
+                    //    var ab = call;
+                    //},
                     AuthorizationCodeReceived = async (context) =>
                     {
                         var code = context.Code;
@@ -81,13 +84,21 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                         //ConfidentialClientApplication cca = new ConfidentialClientApplication(
                         //    clientId,
                         //    redirectUri,
-                        //    new ClientCredential(
+                        //    new ClientCredential(appSecret)
                         //    userTokenCache,
                         //    null);
-                        //string[] scopes = graphScopes.Split(new char[] { ' ' });
 
-                        //AuthenticationResult result = await cca.AcquireTokenByAuthorizationCodeAsync(code, scopes);
-                        //UserScopes = result.Scopes;
+                        //ConfidentialClientApplication cca = new ConfidentialClientApplication(
+                        //    clientId, redirectUri, new ClientCredential(appSecret), userTokenCache, null);
+                                                
+                        var cred = new ClientCredential(appSecret);
+                        ConfidentialClientApplication cca = new ConfidentialClientApplication(clientId, redirectUri, cred, userTokenCache, null);
+
+                        string[] scopes = graphScopes.Split(new char[] { ' ' });
+
+                        AuthenticationResult result = await cca.AcquireTokenByAuthorizationCodeAsync(code, scopes);
+                        UserScopes = result.Scopes;
+                        var accesstoke = result.AccessToken;
                     },
 
                     AuthenticationFailed = OnAuthenticationFailed
