@@ -8,6 +8,11 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security.Notifications;
+using Microsoft.Identity.Client;
+using System.Web;
+using AppModelv2_WebApp_OpenIDConnect_DotNet.TokenStorage;
+using System.IdentityModel.Claims;
+using System.Collections.Generic;
 
 [assembly: OwinStartup(typeof(AppModelv2_WebApp_OpenIDConnect_DotNet.Startup))]
 
@@ -23,9 +28,12 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
 
         // Tenant is the tenant ID (e.g. contoso.onmicrosoft.com, or 'common' for multi-tenant)
         static string tenant = System.Configuration.ConfigurationManager.AppSettings["Tenant"];
+        private static string graphScopes = System.Configuration.ConfigurationManager.AppSettings["GraphScopes"].ToLower();
 
         // Authority is the URL for authority, composed by Microsoft identity platform endpoint and the tenant name (e.g. https://login.microsoftonline.com/contoso.onmicrosoft.com/v2.0)
-        string authority = String.Format(System.Globalization.CultureInfo.InvariantCulture, System.Configuration.ConfigurationManager.AppSettings["Authority"], tenant);
+        static string authority = String.Format(System.Globalization.CultureInfo.InvariantCulture, System.Configuration.ConfigurationManager.AppSettings["Authority"], tenant);
+
+        public static IEnumerable<string> UserScopes = new List<string>();
 
         /// <summary>
         /// Configure OWIN to use OpenIdConnect 
@@ -58,6 +66,30 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
                 // OpenIdConnectAuthenticationNotifications configures OWIN to send notification of failed authentications to OnAuthenticationFailed method
                 Notifications = new OpenIdConnectAuthenticationNotifications
                 {
+                    SecurityTokenReceived = async (call) => 
+                    {
+                        var ab = call;
+                    },
+                    AuthorizationCodeReceived = async (context) =>
+                    {
+                        var code = context.Code;
+                        string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                        TokenCache userTokenCache = new SessionTokenCache(signedInUserID,
+                            context.OwinContext.Environment["System.Web.HttpContextBase"] as HttpContextBase).GetMsalCacheInstance();
+
+                        //ConfidentialClientApplication cca = new ConfidentialClientApplication(
+                        //    clientId,
+                        //    redirectUri,
+                        //    new ClientCredential(
+                        //    userTokenCache,
+                        //    null);
+                        //string[] scopes = graphScopes.Split(new char[] { ' ' });
+
+                        //AuthenticationResult result = await cca.AcquireTokenByAuthorizationCodeAsync(code, scopes);
+                        //UserScopes = result.Scopes;
+                    },
+
                     AuthenticationFailed = OnAuthenticationFailed
                 }
             }
