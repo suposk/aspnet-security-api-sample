@@ -309,46 +309,54 @@ namespace MicrosoftGraph_Security_API_Sample.Models
             }
             else
             {
-                // Create filter query
-                var filterQuery = GraphQueryProvider.GetQueryByAlertFilter(filters);
-
-                var customOrderByParams = new Dictionary<string, string>();
-                //// If there are no filters and there are no custom odredByParams (if specified only top X)
-                if ((odredByParams == null || odredByParams.Count() < 1) && filters.Count < 1)
+                try
                 {
-                    customOrderByParams.Add("createdDateTime", "desc");
+                    // Create filter query
+                    var filterQuery = GraphQueryProvider.GetQueryByAlertFilter(filters);
+
+                    var customOrderByParams = new Dictionary<string, string>();
+                    //// If there are no filters and there are no custom odredByParams (if specified only top X)
+                    if ((odredByParams == null || odredByParams.Count() < 1) && filters.Count < 1)
+                    {
+                        customOrderByParams.Add("createdDateTime", "desc");
+                    }
+                    else if (filters.Count >= 1 && filters.ContainsKey("createdDateTime"))
+                    {
+                        customOrderByParams.Add("createdDateTime", "desc");
+                    }
+
+                    // Create request with filter and top X
+                    ISecurityAlertsCollectionRequest request = null;
+
+                    if (string.IsNullOrEmpty(filterQuery))
+                    {
+                        request = this.graphClient.Security.Alerts.Request().Top(filters.Top);
+                    }
+                    else
+                    {
+                        request = this.graphClient.Security.Alerts.Request().Filter(filterQuery).Top(filters.Top);
+                    }
+
+                    // Add order py params
+                    if (customOrderByParams.Count > 0)
+                    {
+                        request = request.OrderBy(string.Join(", ", customOrderByParams.Select(param => $"{param.Key} {param.Value}")));
+                    }
+                    else if (odredByParams != null && odredByParams.Count() > 0)
+                    {
+                        request = request.OrderBy(string.Join(", ", odredByParams.Select(param => $"{param.Key} {param.Value}")));
+                    }
+
+                    // Get alerts
+                    var result = await request.GetAsync();
+
+                    return new Tuple<IEnumerable<Alert>, string>(result, filterQuery);
                 }
-                else if (filters.Count >= 1 && filters.ContainsKey("createdDateTime"))
+                catch (Exception ex)
                 {
-                    customOrderByParams.Add("createdDateTime", "desc");
+                    
                 }
-
-                // Create request with filter and top X
-                ISecurityAlertsCollectionRequest request = null;
-
-                if (string.IsNullOrEmpty(filterQuery))
-                {
-                     request = this.graphClient.Security.Alerts.Request().Top(filters.Top);
-                }
-                else
-                {
-                     request = this.graphClient.Security.Alerts.Request().Filter(filterQuery).Top(filters.Top);
-                }      
-
-                // Add order py params
-                if (customOrderByParams.Count > 0)
-                {
-                    request = request.OrderBy(string.Join(", ", customOrderByParams.Select(param => $"{param.Key} {param.Value}")));
-                }
-                else if (odredByParams != null && odredByParams.Count() > 0)
-                {
-                    request = request.OrderBy(string.Join(", ", odredByParams.Select(param => $"{param.Key} {param.Value}")));
-                }
-
-                // Get alerts
-                var result = await request.GetAsync();
-
-                return new Tuple<IEnumerable<Alert>, string>(result, filterQuery);
+                return null;
             }
         }
 
