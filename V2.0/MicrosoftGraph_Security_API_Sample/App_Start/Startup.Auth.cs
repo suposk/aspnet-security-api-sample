@@ -50,6 +50,7 @@ namespace MicrosoftGraph_Security_API_Sample
                     PostLogoutRedirectUri = redirectUri,
                     RedirectUri = redirectUri,
                     Scope = "openid email profile offline_access " + graphScopes,
+                    //Scope = "openid email profile offline_access",
                     TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = false
@@ -72,6 +73,7 @@ namespace MicrosoftGraph_Security_API_Sample
                             string[] scopes = graphScopes.Split(new char[] { ' ' });
 
                             AuthenticationResult result = await cca.AcquireTokenByAuthorizationCodeAsync(code, scopes);
+                            var token = result.AccessToken;
                             UserScopes = result.Scopes;
                         },
                         AuthenticationFailed = this.OnAuthenticationFailedAsync,

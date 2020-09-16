@@ -22,6 +22,13 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            ReadValues();
+
+            return View();
+        }
+
+        private void ReadValues()
+        {
             var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
 
             //You get the user’s first and last name below:
@@ -35,19 +42,19 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
 
             // TenantId is the unique Tenant Id - which represents an organization in Azure AD
             ViewBag.TenantId = userClaims?.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid")?.Value;
-
-            return View();
         }
 
-        public async Task Token()
+        //public async Task Token()
+        public async Task<ActionResult> Token()
         {
-            var userClaims = User.Identity as System.Security.Claims.ClaimsIdentity;
+            //ReadValues();
 
             string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
             //string accessToken = SampleAuthProvider.Instance.AccessToken;
-            ViewBag.accessToken = accessToken;
 
-            var secureScores = await this.GetSecureScore(accessToken, "?$top=1");
+            var me = await this.GetMe(accessToken);
+            var score = await this.GetScore(accessToken);
+            var alers = await this.GetAlerts(accessToken, "?$top=1");
             //var secureScores = await this.GetSecureScore(accessToken, "");
 
             var authenticationProvider = new DelegateAuthenticationProvider(
@@ -74,21 +81,92 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
             {
                 Debug.WriteLine($"Error: {ex.Message} {ex?.InnerException}");
             }
-
+            return View("Index");
+            //return View();
         }
 
 
-        public async Task<List<SecureScore>> GetSecureScore(string accessToken, string queryParameter)
+        public async Task<List<SecureScore>> GetAlerts(string accessToken, string queryParameter)
         {
             try
-            {
-                //string endpoint = "https://graph.microsoft.com/beta/security/securescores";
-                //string endpoint = "https://graph.microsoft.com/v1.0/Security/secureScores";                      
+            {             
                 string endpoint = "https://graph.microsoft.com/v1.0/security/alerts"; queryParameter = string.Empty;
 
                 using (var client = new HttpClient())
                 {
                     using (var request = new HttpRequestMessage(HttpMethod.Get, endpoint + queryParameter))
+                    {
+                        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                        using (var response = await client.SendAsync(request))
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string result = await response.Content.ReadAsStringAsync();
+                                SecureScoreResult secureScoreResult = JsonConvert.DeserializeObject<SecureScoreResult>(result);
+                                return secureScoreResult.Value;
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"Error: {response}");
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<SecureScore>> GetMe(string accessToken, string endpoint = null)
+        {
+            try
+            {
+                string url = endpoint ?? "https://graph.microsoft.com/v1.0/me/";                                            
+
+                using (var client = new HttpClient())
+                {
+                    using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+                    {
+                        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                        using (var response = await client.SendAsync(request))
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string result = await response.Content.ReadAsStringAsync();
+                                SecureScoreResult secureScoreResult = JsonConvert.DeserializeObject<SecureScoreResult>(result);
+                                return secureScoreResult.Value;
+                            }
+                            else
+                            {
+                                Debug.WriteLine($"Error: {response}");
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<SecureScore>> GetScore(string accessToken, string endpoint = null)
+        {
+            try
+            {
+                string url = endpoint ?? "https://graph.microsoft.com/beta/security/secureScores?$top=5";                
+
+                using (var client = new HttpClient())
+                {
+                    using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                     {
                         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
