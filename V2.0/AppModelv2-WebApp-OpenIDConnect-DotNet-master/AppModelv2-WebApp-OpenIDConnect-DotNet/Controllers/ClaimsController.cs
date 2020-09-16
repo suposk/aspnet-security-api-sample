@@ -47,9 +47,10 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
         //public async Task Token()
         public async Task<ActionResult> Token()
         {
-            //ReadValues();
+            ReadValues();
 
             string accessToken = await SampleAuthProvider.Instance.GetUserAccessTokenAsync();
+            ViewBag.AccessToken = accessToken;
             //string accessToken = SampleAuthProvider.Instance.AccessToken;
 
             var me = await this.GetMe(accessToken);
@@ -122,7 +123,7 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
             }
         }
 
-        public async Task<List<SecureScore>> GetMe(string accessToken, string endpoint = null)
+        public async Task<string> GetMe(string accessToken, string endpoint = null)
         {
             try
             {
@@ -139,9 +140,8 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet.Controllers
                         {
                             if (response.IsSuccessStatusCode)
                             {
-                                string result = await response.Content.ReadAsStringAsync();
-                                SecureScoreResult secureScoreResult = JsonConvert.DeserializeObject<SecureScoreResult>(result);
-                                return secureScoreResult.Value;
+                                string result = await response.Content.ReadAsStringAsync();                                
+                                return result;
                             }
                             else
                             {
