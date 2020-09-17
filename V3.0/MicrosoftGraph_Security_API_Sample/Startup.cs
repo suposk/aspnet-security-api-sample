@@ -25,6 +25,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MicrosoftGraph_Security_API_Sample
 {
@@ -155,6 +156,17 @@ namespace MicrosoftGraph_Security_API_Sample
             {
                 c.SwaggerEndpoint("/swagger/v3/swagger.json", "MicrosoftGraph_Security_API_Sample V3");
             });
+                                   
+            
+            var envs = Environment.GetEnvironmentVariables();
+            foreach (var item in envs.Keys)
+            {
+                if (item.ToString().Contains("ENVIRONMENT"))
+                {
+
+                }
+            }
+
 
             // enable SPA service if it is client dev environment
             var clientEnv = Environment.GetEnvironmentVariable("CLIENT_ENVIRONMENT");
