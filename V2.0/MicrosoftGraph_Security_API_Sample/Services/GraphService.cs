@@ -354,9 +354,8 @@ namespace MicrosoftGraph_Security_API_Sample.Models
                 }
                 catch (Exception ex)
                 {
-                    
-                }
-                return null;
+                    throw;
+                }                
             }
         }
 
