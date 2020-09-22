@@ -43,6 +43,8 @@
         @Html.ActionLink("See Your Claims", "Index", "Claims")
         <br /><br />
         @Html.ActionLink("Sign out", "SignOut", "Home")
+        <br /><br />
+        @Html.ActionLink("See Access Token", "Token", "Claims")
     }
     @if (!string.IsNullOrWhiteSpace(Request.QueryString["errormessage"]))
     {
