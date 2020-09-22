@@ -33,6 +33,7 @@ namespace MicrosoftGraph_Security_API_Sample.Providers
         {
         }
 
+        public string KeyVaultAppSecret = null;
         private SessionTokenCache TokenCache { get; set; }
 
         public static SampleAuthProvider Instance
