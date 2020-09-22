@@ -52,8 +52,8 @@ namespace AppModelv2_WebApp_OpenIDConnect_DotNet
             {
                 // Sets the ClientId, authority, RedirectUri as obtained from web.config
                 ClientId = clientId,
-                //Authority = authority,
-                Authority = "https://login.microsoftonline.com/common/v2.0",
+                Authority = authority,
+                //Authority = "https://login.microsoftonline.com/common/v2.0",
                 RedirectUri = redirectUri,
                 // PostLogoutRedirectUri is the page that users will be redirected to after sign-out. In this case, it is using the home page
                 PostLogoutRedirectUri = redirectUri,
