@@ -18,10 +18,10 @@ using MicrosoftGraph_Security_API_Sample.TokenStorage;
 using Microsoft.Identity.Client;
 using Microsoft.Owin.Security.Notifications;
 using Microsoft.IdentityModel.Protocols;
-using Microsoft.Azure.KeyVault;
-using Azure.Security.KeyVault.Secrets;
+//using Microsoft.Azure.KeyVault;//
+//using Azure.Security.KeyVault.Secrets;
 using System;
-using Azure.Identity;
+//using Azure.Identity;
 using System.Linq;
 
 namespace MicrosoftGraph_Security_API_Sample
@@ -44,15 +44,15 @@ namespace MicrosoftGraph_Security_API_Sample
         static string GetVaultValue()
 
         {
-            string url = "https://securitycenter.vault.azure.net/secrets/sampleSecurityCenter/1bd89520c23a40769092e045b611cc8a";
-            var client = new SecretClient(vaultUri: new Uri(url), credential: new DefaultAzureCredential());
-            var sec = client.GetPropertiesOfSecrets();
-            if (sec != null)
-            {
-                var res = sec.FirstOrDefault((a) => a.VaultUri.AbsolutePath == url);
-                return res.Name;
+            //string url = "https://securitycenter.vault.azure.net/secrets/sampleSecurityCenter/1bd89520c23a40769092e045b611cc8a";
+            //var client = new SecretClient(vaultUri: new Uri(url), credential: new DefaultAzureCredential());
+            //var sec = client.GetPropertiesOfSecrets();
+            //if (sec != null)
+            //{
+            //    var res = sec.FirstOrDefault((a) => a.VaultUri.AbsolutePath == url);
+            //    return res.Name;
 
-            }
+            //}
             return null;
         }
 
